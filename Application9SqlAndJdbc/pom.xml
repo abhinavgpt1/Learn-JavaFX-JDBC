@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>Learn103</artifactId>
+    <artifactId>Application9SqlAndJdbc</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Learn103</name>
+    <name>Application9SqlAndJdbc</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -77,7 +77,9 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.learn103/com.example.learn103.HelloApplication</mainClass>
+                            <mainClass>
+                                com.example.application9sqlandjdbc/com.example.application9sqlandjdbc.Main
+                            </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
