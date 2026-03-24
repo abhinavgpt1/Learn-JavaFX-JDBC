@@ -49,7 +49,7 @@ public class Main extends Application {
     public void start(Stage stage) {
         Parent root = getComponents();
         Scene scene = new Scene(root);
-        stage.setTitle("Hello World!");
+        stage.setTitle("Hello World Again!");
         stage.setScene(scene);
         stage.show();
     }
