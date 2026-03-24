@@ -5,7 +5,7 @@ NOTE: Javafx came with Java 8, but now you need to follow
 ### Setup JavaFX in IntelliJ
 1. Install JavaFX SDK 24 and Java 24.
 2. Set SDK to Java 24. Also, keep a check of language level >= 18.
-3. Under File > Project Structure > Libraries, add the JavaFX SDK.
+3. (optional) Under File > Project Structure > Libraries, add the JavaFX SDK.
 
 ### Create JavaFX Project (non-modular way)
 1. Right-click on your project/directory where you want your application > New > Module > Select JavaFX.
@@ -20,14 +20,15 @@ NOTE: Javafx came with Java 8, but now you need to follow
 
 NOTE: 
 1. VM Options (passed to JVM) != Program args (passed to application)
-2. Some warnings may come due to Java and JavaFX latest versions, you can suppress them by adding following:
+2. You may have to set java sdk of application in Edit Configuration to that of module.
+3. Some warnings may come due to Java and JavaFX latest versions, you can suppress them by adding following:
    * --enable-native-access=ALL-UNNAMED
        * https://stackoverflow.com/questions/79725728/how-to-suppress-restricted-method-called-java-lang-systemload-warning-when
    * --sun-misc-unsafe-memory-access=allow
        * https://stackoverflow.com/questions/79525654/errors-after-updating-java-23-and-javafx-22-to-java-24-and-javafx-24
    * --enable-native-access=javafx.graphics
        * No Reference
-3. Checkout the openjfx docs to run application using javac / java commands.
+4. Checkout the openjfx docs to run application using javac / java commands.
 
 ### Final VM Options:
 ```
