@@ -28,11 +28,12 @@ NOTE:
        * https://stackoverflow.com/questions/79525654/errors-after-updating-java-23-and-javafx-22-to-java-24-and-javafx-24
    * --enable-native-access=javafx.graphics
        * No Reference
-4. Checkout the openjfx docs to run application using javac / java commands.
+4. To enable assertions at runtime, pass -ea flag in VM options
+5. Checkout the openjfx docs to run application using javac / java commands.
 
 ### Final VM Options:
 ```
---module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow --enable-native-access=javafx.graphics
+-ea --module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow --enable-native-access=javafx.graphics
 ```
 
 Tip: Link Scene Builder app with IntelliJ, and open .fxml files directly by right-click > Open in SceneBuilder

@@ -96,10 +96,7 @@ public class MarksCalculatorController {
         try {
             Float.parseFloat(value); // Not Integer.parseInt()
             return true;
-        } catch(NumberFormatException n){
-            System.out.println("Incorrect input: " + value);
-            return false;
-        } catch(NullPointerException n){
+        } catch(NumberFormatException | NullPointerException n){
             System.out.println("Incorrect input: " + value);
             return false;
         }
@@ -107,6 +104,18 @@ public class MarksCalculatorController {
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
+        // assert 1 == 2; // NO FAILURE
+        // qq: why doesn't assert 1 == 2; throw AssertionError as expected?
+        /*
+          The assert 1 == 2 statement is not throwing an AssertionError because assertions are disabled by default in the Java Virtual Machine (JVM)
+          To make assertions work (throw an error when false), you must explicitly enable them at runtime using a specific command-line flag
+          You need to pass the -enableassertions (or the shorter -ea) flag
+
+          javac YourProgramName.java
+          java -ea YourProgramName
+         */
+        // to make assert 1==2 working, pass -ea in VM options
+
         assert txtCpp != null : "fx:id=\"txtCpp\" was not injected: check your FXML file 'MarksCalculatorView.fxml'.";
         assert txtJava != null : "fx:id=\"txtJava\" was not injected: check your FXML file 'MarksCalculatorView.fxml'.";
         assert txtMaxTotal != null : "fx:id=\"txtMaxTotal\" was not injected: check your FXML file 'MarksCalculatorView.fxml'.";
