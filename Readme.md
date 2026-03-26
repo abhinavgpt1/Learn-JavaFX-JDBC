@@ -35,5 +35,6 @@ NOTE:
 --module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml --enable-native-access=ALL-UNNAMED --sun-misc-unsafe-memory-access=allow --enable-native-access=javafx.graphics
 ```
 
-Tip: You can set your installed version of scene builder to view FXML in IntelliJ.
-  * https://www.jetbrains.com/help/idea/opening-fxml-files-in-javafx-scene-builder.html#open_files_in_scene_builder_app
+Tip: Link Scene Builder app with IntelliJ, and open .fxml files directly by right-click > Open in SceneBuilder
+  * Youtube: https://youtu.be/zvgWgpGZVKc?si=STzGiiZaiA3JYo8O&t=61
+  * Intellij Docs: https://www.jetbrains.com/help/idea/opening-fxml-files-in-javafx-scene-builder.html#open_files_in_scene_builder_app
