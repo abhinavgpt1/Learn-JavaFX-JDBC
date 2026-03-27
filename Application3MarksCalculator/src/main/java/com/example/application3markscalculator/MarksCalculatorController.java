@@ -88,13 +88,12 @@ public class MarksCalculatorController {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Wrong Input");
         alert.setContentText(context);
-        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE); // for lengthy messages
         alert.show();
     }
 
     boolean isNumber(String value){
         try {
-            Float.parseFloat(value); // Not Integer.parseInt()
+            Float.parseFloat(value); // Not Integer.parseInt() since it can be decimal
             return true;
         } catch(NumberFormatException | NullPointerException n){
             System.out.println("Incorrect input: " + value);

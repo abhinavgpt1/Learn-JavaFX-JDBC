@@ -24,12 +24,19 @@
         <Separator layoutX="64.0" layoutY="88.0" prefHeight="3.0" prefWidth="195.0" AnchorPane.leftAnchor="64.0" AnchorPane.rightAnchor="45.0" />
         <Label layoutX="117.0" layoutY="112.0" text="C++" />
         <TextField fx:id="txtCpp" layoutX="155.0" layoutY="108.0" prefHeight="25.0" prefWidth="49.0" />
+      <Label layoutX="208.0" layoutY="105.0" text="*" textFill="RED" />
       <Label layoutX="117.0" layoutY="148.0" text="Java" />
       <TextField fx:id="txtJava" layoutX="155.0" layoutY="144.0" prefHeight="25.0" prefWidth="49.0" />
-        <Button layoutX="132.0" layoutY="310.0" mnemonicParsing="false" onAction="#doNew" text="New" />
+      <Label layoutX="208.0" layoutY="141.0" text="*" textFill="RED" />
       <Separator layoutX="14.0" layoutY="183.0" prefHeight="3.0" prefWidth="279.0" />
         <Button layoutX="65.0" layoutY="212.0" mnemonicParsing="false" onAction="#doTotal" text="Total" />
         <TextField fx:id="txtTotal" layoutX="129.0" layoutY="212.0" prefHeight="25.0" prefWidth="49.0" />
+      <Label layoutX="183.0" layoutY="213.0" text="/">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtMaxTotal" layoutX="194.0" layoutY="212.0" prefHeight="25.0" prefWidth="49.0" />
         <Button layoutX="33.0" layoutY="251.0" mnemonicParsing="false" onAction="#doPercentage" text="Percentage" />
         <TextField fx:id="txtPercentage" layoutX="130.0" layoutY="251.0" prefHeight="25.0" prefWidth="114.0" />
       <Label layoutX="248.0" layoutY="254.0" text="\%">
@@ -37,14 +44,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="183.0" layoutY="213.0" text="/">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="txtMaxTotal" layoutX="194.0" layoutY="212.0" prefHeight="25.0" prefWidth="49.0" />
       <Separator layoutX="13.0" layoutY="300.0" prefHeight="3.0" prefWidth="279.0" />
-      <Label layoutX="208.0" layoutY="105.0" text="*" textFill="RED" />
-      <Label layoutX="208.0" layoutY="141.0" text="*" textFill="RED" />
+        <Button layoutX="132.0" layoutY="310.0" mnemonicParsing="false" onAction="#doNew" text="New" />
     </children>
 </AnchorPane>
