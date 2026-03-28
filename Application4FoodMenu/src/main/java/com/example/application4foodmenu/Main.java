@@ -14,7 +14,7 @@ import java.io.IOException;
  * 3. Deselecting radio button using button and Java streams (It's futile to keep a click count check using Event listener, or using an On Action event method).
  * 4. Escape % in String.format().
  * 5. Utilise FXML methods internally with each other.
- * 6. TextArea editable != TextArea disable
+ * 6. TextArea editable != TextArea disable != TextArea visible
  */
 public class Main extends Application {
     @Override

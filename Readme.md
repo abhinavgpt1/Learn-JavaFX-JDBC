@@ -20,6 +20,7 @@ NOTE: Javafx came with Java 8, but now you need to follow
 
 NOTE: 
 1. VM Options (passed to JVM) != Program args (passed to application)
+    * https://stackoverflow.com/questions/5751851/whats-the-difference-between-program-arguments-and-vm-arguments
 2. You may have to set java sdk of application in Edit Configuration to that of module.
 3. Some warnings may come due to Java and JavaFX latest versions, you can suppress them by adding following:
    * --enable-native-access=ALL-UNNAMED

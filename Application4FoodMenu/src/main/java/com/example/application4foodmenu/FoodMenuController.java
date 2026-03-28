@@ -171,7 +171,7 @@ public class FoodMenuController {
         rad10.setUserData(10);
         rad20.setUserData(20);
 
-        // redundant here since it's set in fxml. But it's imp to know Disable != Editable.
+        // redundant here since it's set in fxml. But it's imp to know Disable != Editable != Visible
         txtPostBillingMessage.setEditable(false);
     }
 }
