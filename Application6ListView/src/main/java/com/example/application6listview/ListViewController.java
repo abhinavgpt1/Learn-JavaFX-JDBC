@@ -5,13 +5,22 @@
 package com.example.application6listview;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 
 public class ListViewController {
 
@@ -68,17 +77,20 @@ public class ListViewController {
     @FXML
     void doMoveItems(ActionEvent event) {
         ObservableList<Integer> selectedItems = lstItems.getSelectionModel().getSelectedItems();
-        lstSelected.getItems().addAll(selectedItems); //not removing from lstItems since we want multiple instances of same number.
+        lstSelected.getItems().addAll(selectedItems); // not removing from lstItems since we want multiple instances of same number.
 
         // track what all items moved during a single operation
-        String itemsMoved = String.join(",", selectedItems.stream().map(String::valueOf).toArray(String[]::new));
+        String itemsMoved = selectedItems.stream().map(String::valueOf).collect(Collectors.joining(","));
         txtItemsMoved.setText("You moved: " + itemsMoved);
     }
 
     @FXML
     void doSumLstSelected(ActionEvent event) {
+        // Note: getItems() != getSelectionModel().getSelectedItems()
+        // Note: comboBox had getSelectedItem() and getSelectedIndex(),
+        // whereas ListView has both getSelectedItem() and Items(), as well as getSelectedIndex() and Indices()
         Optional<Integer> sumOpt = lstSelected.getItems().stream().reduce(Integer::sum); // = reduce((i1, i2) -> i1 + i2);
-        lblSum.setText(sumOpt.map(String::valueOf).orElse("")); // or simply use if-else with sumOpt.isPresent()
+        lblSum.setText(sumOpt.map(String::valueOf).orElse("0")); // or simply use if-else with sumOpt.isPresent()
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -88,10 +100,17 @@ public class ListViewController {
         assert lstSelected != null : "fx:id=\"lstSelected\" was not injected: check your FXML file 'ListView.fxml'.";
         assert txtItemsMoved != null : "fx:id=\"txtItemsMoved\" was not injected: check your FXML file 'ListView.fxml'.";
 
-        // app init
-        Integer [] list = new Integer[] {1, 5, 10, 50, 100};
-        lstItems.getItems().addAll(list);
+        // Note: Don't forget to resolve ListView<?>
         lstItems.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         lstSelected.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        // Way 1: populate ListView
+        List<Integer> list = Arrays.asList(1, 5, 10, 50, 100);
+        lstItems.setItems(FXCollections.observableList(list));
+
+        // Way 2: populate ListView
+        // Integer [] list = new Integer[] {1, 5, 10, 50, 100};
+        // lstItems.getItems().addAll(list);
+
     }
 }

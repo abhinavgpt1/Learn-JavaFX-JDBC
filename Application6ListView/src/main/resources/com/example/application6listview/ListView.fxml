@@ -9,15 +9,15 @@
 
 <AnchorPane cacheShape="false" centerShape="false" prefHeight="394.0" prefWidth="330.0" scaleShape="false" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application6listview.ListViewController">
     <children>
-      <Separator layoutX="164.0" layoutY="4.0" orientation="VERTICAL" prefHeight="337.0" prefWidth="0.0" />
         <ListView fx:id="lstItems" layoutX="20.0" layoutY="17.0" prefHeight="200.0" prefWidth="116.0" />
+      <Separator layoutX="164.0" layoutY="4.0" orientation="VERTICAL" prefHeight="337.0" prefWidth="0.0" />
         <Button layoutX="151.0" layoutY="104.0" mnemonicParsing="false" onAction="#doMoveItems" text="&gt;&gt;" />
         <ListView fx:id="lstSelected" layoutX="197.0" layoutY="17.0" prefHeight="200.0" prefWidth="116.0" />
+      <Button layoutX="25.0" layoutY="236.0" mnemonicParsing="false" onAction="#doAddLstItems" text="Add" />
         <Button layoutX="80.0" layoutY="236.0" mnemonicParsing="false" onAction="#doDeleteLstItems" text="Delete" />
       <Button layoutX="230.0" layoutY="236.0" mnemonicParsing="false" onAction="#doDeleteLstSelected" text="Delete" />
         <Button layoutX="197.0" layoutY="279.0" mnemonicParsing="false" onAction="#doSumLstSelected" text="Sum" />
         <Label fx:id="lblSum" layoutX="246.0" layoutY="279.0" prefHeight="25.0" prefWidth="70.0" text=" " />
       <TextArea fx:id="txtItemsMoved" editable="false" layoutX="67.0" layoutY="344.0" prefHeight="44.0" prefWidth="200.0" wrapText="true" />
-      <Button layoutX="25.0" layoutY="236.0" mnemonicParsing="false" onAction="#doAddLstItems" text="Add" />
     </children>
 </AnchorPane>
