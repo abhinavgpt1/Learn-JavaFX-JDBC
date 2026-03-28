@@ -10,15 +10,11 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="359.0" prefWidth="645.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application8shopitems.ShopItemsController">
+<AnchorPane prefHeight="303.0" prefWidth="645.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application8shopitems.ShopItemsController">
    <children>
-      <Separator layoutX="319.0" layoutY="11.0" orientation="VERTICAL" prefHeight="337.0" prefWidth="5.0" />
       <ComboBox fx:id="comboType" layoutX="13.0" layoutY="33.0" onAction="#doPopulateTypeItems" prefHeight="25.0" prefWidth="282.0" promptText="Select Type" />
       <ListView fx:id="lstItems" layoutX="11.0" layoutY="72.0" prefHeight="181.0" prefWidth="191.0" />
       <ListView fx:id="lstItemsPrice" layoutX="211.0" layoutY="72.0" prefHeight="181.0" prefWidth="84.0" />
-      <Button layoutX="304.0" layoutY="126.0" mnemonicParsing="false" onAction="#doAdd" prefHeight="25.0" prefWidth="35.0" text="&gt;&gt;" />
-      <ListView fx:id="lstSelectedItems" layoutX="349.0" layoutY="72.0" prefHeight="133.0" prefWidth="191.0" />
-      <ListView fx:id="lstSelectedItemsPrice" layoutX="548.0" layoutY="72.0" prefHeight="133.0" prefWidth="84.0" />
       <Label layoutX="12.0" layoutY="275.0" prefHeight="17.0" prefWidth="51.0" text="Discount" />
       <RadioButton fx:id="rad10" layoutX="66.0" layoutY="275.0" mnemonicParsing="false" text="10">
          <toggleGroup>
@@ -26,12 +22,16 @@
          </toggleGroup>
       </RadioButton>
       <RadioButton fx:id="rad20" layoutX="112.0" layoutY="275.0" mnemonicParsing="false" text="20" toggleGroup="$toggleDiscount" />
-      <RadioButton fx:id="radCustomDiscount" layoutX="154.0" layoutY="275.0" mnemonicParsing="false" onAction="#doEnableCustomDiscountTxt" toggleGroup="$toggleDiscount" />
-      <TextField fx:id="txtCustomDiscount" disable="true" layoutX="175.0" layoutY="271.0" prefHeight="25.0" prefWidth="35.0" />
-      <Label layoutX="215.0" layoutY="275.0" text="\%" />
-      <Button layoutX="393.0" layoutY="219.0" mnemonicParsing="false" onAction="#doDeleteSelectedItem" text="Delete" />
-      <Button layoutX="467.0" layoutY="219.0" mnemonicParsing="false" onAction="#doClearCart" text="Clear" />
-      <Button layoutX="386.0" layoutY="272.0" mnemonicParsing="false" onAction="#doBill" prefHeight="25.0" prefWidth="135.0" text="Bill" />
-      <Label fx:id="lblBill" alignment="CENTER" layoutX="386.0" layoutY="311.0" prefHeight="36.0" prefWidth="135.0" />
+      <RadioButton fx:id="radCustomDiscount" layoutX="154.0" layoutY="275.0" mnemonicParsing="false" toggleGroup="$toggleDiscount" />
+      <TextField fx:id="txtCustomDiscount" disable="true" layoutX="175.0" layoutY="271.0" prefHeight="25.0" prefWidth="68.0" />
+      <Label layoutX="246.0" layoutY="275.0" text="\%" />
+      <Separator layoutX="317.0" layoutY="6.0" orientation="VERTICAL" prefHeight="304.0" prefWidth="10.0" />
+      <Button layoutX="304.0" layoutY="126.0" mnemonicParsing="false" onAction="#doAdd" prefHeight="25.0" prefWidth="35.0" text="&gt;&gt;" />
+      <ListView fx:id="lstSelectedItems" layoutX="349.0" layoutY="72.0" prefHeight="133.0" prefWidth="191.0" />
+      <ListView fx:id="lstSelectedItemsPrice" layoutX="548.0" layoutY="72.0" prefHeight="133.0" prefWidth="84.0" />
+      <Button layoutX="413.0" layoutY="217.0" mnemonicParsing="false" onAction="#doDeleteSelectedItems" text="Delete" />
+      <Button layoutX="556.0" layoutY="21.0" mnemonicParsing="false" onAction="#doClearCart" text="Clear Cart" />
+      <Button layoutX="499.0" layoutY="217.0" mnemonicParsing="false" onAction="#doBill" prefHeight="25.0" prefWidth="115.0" text="Bill" />
+      <Label fx:id="lblBill" alignment="CENTER" layoutX="389.0" layoutY="266.0" prefHeight="36.0" prefWidth="201.0" />
    </children>
 </AnchorPane>

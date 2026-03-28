@@ -5,16 +5,30 @@
 package com.example.application8shopitems;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+
+import javax.swing.JOptionPane;
+
+import static javax.swing.JOptionPane.QUESTION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
 public class ShopItemsController {
 
@@ -70,10 +84,12 @@ public class ShopItemsController {
         // Rule for this app: single purchase of particular item
 
         // Objective of this function:
-        // 1. Add all selected items in lstSelectedItems
+        // 1. Add all selected items in lstItems (not lstItemsPrice)
         // 2. Do not repeat same item
         // 3. Alert user to not select already selected item
-        ObservableList<Integer> selectedItemsIndices = lstItems.getSelectionModel().getSelectedIndices();
+        // no need for ObservableList ref since it won't change inside this function, and doesn't need to be observed.
+        // FYI, this is read-only list
+        List<Integer> selectedItemsIndices = lstItems.getSelectionModel().getSelectedIndices();
 
         // Addition to lstSelectedItems and lstSelectedItemsPrice can be done using DEVICE_DATA too, but here we're taking the long route.
         // Efficient DS for DEVICE_DATA would be map of map.
@@ -89,7 +105,7 @@ public class ShopItemsController {
             }
         }
         if (!allRepeatedItems.isEmpty())
-            showAlert("Single quantity allowed per item", "Following items are already selected: \n" + allRepeatedItems, Alert.AlertType.INFORMATION);
+            showAlert("Multiple Quantity For Item Not Allowed", "Not adding these items since they are already selected: \n" + allRepeatedItems, Alert.AlertType.INFORMATION);
     }
 
     @FXML
@@ -98,26 +114,33 @@ public class ShopItemsController {
             showAlert("Item-Price mismatch", "Item count doesn't match with Price count", Alert.AlertType.ERROR);
             return;
         }
-        double total = lstSelectedItemsPrice.getItems().stream().mapToDouble(Double::doubleValue).sum();
+        double total = lstSelectedItemsPrice.getItems().stream().reduce(Double::sum).orElse(0.0);
         double discountPercentage = 0;
-        if(toggleDiscount.getSelectedToggle() != null) { // i.e. if atleast one is selected
-            if (rad10.isSelected()) {
-                discountPercentage = 10;
-            } else if (rad20.isSelected()) {
-                discountPercentage = 20;
-            } else {
+        if(toggleDiscount.getSelectedToggle() != null) { // Check if any radio is selected
+            if (toggleDiscount.getSelectedToggle() != radCustomDiscount)
+                discountPercentage = (Double) toggleDiscount.getSelectedToggle().getUserData();
+            else {
+                // if userData = double, this else can be avoided by setting up OutOfScope event on txtCustomDiscount (not key event or listener since we don't want to throw alert as user types)
+                // if userData = string, then Key Type event is fine on txtCustomDiscount. But still, isNumber validation is necessary during billing.
+                String customDiscountStr = txtCustomDiscount.getText();
                 try {
-                    discountPercentage = Double.parseDouble(txtCustomDiscount.getText()); //use regex, otherwise inputs like 10f == 10% discount
-                } catch (NumberFormatException ex) {
+                    discountPercentage = Double.parseDouble(customDiscountStr);
+                } catch (NumberFormatException | NullPointerException ex) {
                     System.out.println("ERROR: Invalid discount input: " + txtCustomDiscount.getText());
-                    showAlert("Invalid Discount", "Enter valid number to get discount", Alert.AlertType.ERROR);
+                    showAlert("Invalid Discount", customDiscountStr + "is not a valid number", Alert.AlertType.ERROR);
                     lblBill.setText("");
                     return;
                 }
             }
         }
-        total -= total*discountPercentage/100;
-        lblBill.setText("Rs. " + String.format("%.2f", total));
+        total -= total * discountPercentage / 100;
+
+        // blocking call i.e. no interaction with app unless dialog closed
+        int optionSelected = JOptionPane.showConfirmDialog(null, "Proceed with billing?", "Billing Confirmation", YES_NO_CANCEL_OPTION, QUESTION_MESSAGE);
+        System.out.println("Option selected on billing confirmation: " + optionSelected);
+        if (optionSelected == 0) { // Yes
+            lblBill.setText(String.format("$ %.2f", total));
+        }
     }
 
     @FXML
@@ -128,28 +151,22 @@ public class ShopItemsController {
     }
 
     @FXML
-    void doEnableCustomDiscountTxt(ActionEvent event) {
-        // alternative way to requestFocus on radioSelection is to put eventListener on radCustomDiscount
-        txtCustomDiscount.setDisable(false);
-        txtCustomDiscount.requestFocus();
-    }
-
-    @FXML
-    void doDeleteSelectedItem(ActionEvent event) {
-        // Way 1 - using loop with indices. Don't simply loop and remove since the List changes dynamically meanwhile the indices being same (during multiple selection).
-        List<Integer> selectedItemIndices = lstSelectedItems.getSelectionModel().getSelectedIndices().stream().collect(Collectors.toList());
+    void doDeleteSelectedItems(ActionEvent event) {
+        // [IMP] - using loop with indices. Don't simply loop and remove since the Lists (lstSelectedItems, lstSelectedItemsPrice) changes dynamically meanwhile the indices being same (during multiple selection).
+        // [IMP] - getSelectedItems/Indices return read-only, hence sort() throws UnsupportedOperationException.
+        List<Integer> selectedItemIndices = new ArrayList<>(lstSelectedItems.getSelectionModel().getSelectedIndices());
         Collections.sort(selectedItemIndices);
         int elementsDeleted = 0;
         for (Integer selectedItemIndex: selectedItemIndices) {
-            lstSelectedItems.getItems().remove(selectedItemIndex.intValue() - elementsDeleted); // remove by index and not by value
-            lstSelectedItemsPrice.getItems().remove(selectedItemIndex.intValue() - elementsDeleted);
+            lstSelectedItems.getItems().remove(selectedItemIndex - elementsDeleted); // remove by index and not by value
+            lstSelectedItemsPrice.getItems().remove(selectedItemIndex - elementsDeleted);
             elementsDeleted++;
         }
-        // // Way 2 for lstSelectedItems - use removalAll()
-        // lstSelectedItems.getItems().removeAll(lstSelectedItems.getSelectionModel().getSelectedItems());
-        // // there's no direct way to pick the Double values in lstSelectedItemsPrice corresponding to indices selected => use same loop logic as above
+        // PTR: this loop logic is because lstSelectedItems is SelectionMode.MULTIPLE
 
-        // PTR: all this logic is because lstSelectedItems is SelectionMode.MULTIPLE
+        // Not helpful here - use removalAll()
+        // lstSelectedItems.getItems().removeAll(lstSelectedItems.getSelectionModel().getSelectedItems());
+        // - there's no direct way to pick the Double values in lstSelectedItemsPrice corresponding to items selected => use same loop logic as above
     }
 
     @FXML
@@ -188,17 +205,33 @@ public class ShopItemsController {
         assert toggleDiscount != null : "fx:id=\"toggleDiscount\" was not injected: check your FXML file 'ShopItemsView.fxml'.";
         assert txtCustomDiscount != null : "fx:id=\"txtCustomDiscount\" was not injected: check your FXML file 'ShopItemsView.fxml'.";
 
-        // app init
         lstItems.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        // lstItemsPrice.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // not needed
+        // lstItemsPrice.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // not needed since we allow item addition based on lstItems and not lstItemPrice.
         lstSelectedItems.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        // lstSelectedItemsPrice.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        // lstSelectedItemsPrice.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // not needed since we allow item deletion based on lstSelectedItems and not lstSelectedItemsPrice.
 
-        txtCustomDiscount.setDisable(true); // although defined in fxml, but this will turn active only when it's radio is selected
-        List<String> deviceTypes = DEVICE_DATA.keySet().stream().collect(Collectors.toList());
+        rad10.setUserData(10.0);
+        rad20.setUserData(20.0);
+        // redundant - defined in fxml: turns active only when it's radio is selected using listener below.
+        // txtCustomDiscount.setDisable(true);
+        // txtCustomDiscount.setEditable(true); // should be true always
+        // FYI, onAction event on radCustomDiscount would enable the textField but won't disable it if any other radio is selected.
+        // Hence, we need to either listen on toggle group.
+        // Listening on radCustomDiscount won't help becoz if I switch from CustomRad to 10, customRad won't know about this change.
+
+        toggleDiscount.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            boolean isCustomDiscountRadSelected = newToggle == radCustomDiscount;
+            txtCustomDiscount.setDisable(!isCustomDiscountRadSelected);
+            if (isCustomDiscountRadSelected) {
+                txtCustomDiscount.requestFocus();
+            }
+        });
+
+        List<String> deviceTypes = new ArrayList<>(DEVICE_DATA.keySet());
         // Or use "var" - a reserved type name != keyword ~= auto (c++)
         // https://stackoverflow.com/questions/63073153/var-keyword-in-java
         comboType.setItems(FXCollections.observableList(deviceTypes));
 
+        // IMP: getSelectedItems() / Indices() return read-only list.
     }
 }
