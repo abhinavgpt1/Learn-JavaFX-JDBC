@@ -27,19 +27,21 @@
             <Cursor fx:constant="DEFAULT" />
          </cursor>
       </ImageView>
-      <Label layoutX="107.0" layoutY="130.0" prefHeight="25.0" prefWidth="127.0" text="Prev. Reading (kWh)" />
-      <Label layoutX="218.0" layoutY="131.0" prefHeight="0.0" prefWidth="4.0" text="*" textFill="RED" />
-      <TextField fx:id="txtPrevReading" layoutX="239.0" layoutY="130.0" prefHeight="25.0" prefWidth="149.0" />
+      <Label layoutX="91.0" layoutY="130.0" prefHeight="25.0" prefWidth="127.0" text="Prev. Reading (kWh)" />
+      <Label layoutX="202.0" layoutY="131.0" prefHeight="0.0" prefWidth="4.0" text="*" textFill="RED" />
+      <TextField fx:id="txtPrevReading" layoutX="239.0" layoutY="130.0" onKeyTyped="#validatePrevReadingOnTheFly" prefHeight="25.0" prefWidth="149.0" />
       <ImageView fx:id="imgPrevReadingValidation" fitHeight="17.0" fitWidth="16.0" layoutX="393.0" layoutY="133.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="108.0" layoutY="161.0" prefHeight="25.0" prefWidth="127.0" text="Current Reading (kWh)" />
-      <Label layoutX="230.0" layoutY="160.0" prefHeight="0.0" prefWidth="4.0" text="*" textFill="RED" />
-      <TextField fx:id="txtCurrentReading" layoutX="239.0" layoutY="161.0" />
+      <Label layoutX="92.0" layoutY="161.0" prefHeight="25.0" prefWidth="127.0" text="Current Reading (kWh)" />
+      <Label layoutX="214.0" layoutY="160.0" prefHeight="0.0" prefWidth="4.0" text="*" textFill="RED" />
+      <TextField fx:id="txtCurrentReading" layoutX="239.0" layoutY="161.0" onKeyTyped="#validateCurrentReadingOnTheFly" />
       <ImageView fx:id="imgCurrentReadingValidation" fitHeight="17.0" fitWidth="16.0" layoutX="393.0" layoutY="165.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="108.0" layoutY="193.0" prefHeight="25.0" prefWidth="127.0" text="Unit Exemption by gov." />
-      <TextField fx:id="txtUnitExemptionLimit" layoutX="239.0" layoutY="193.0" text="0" />
+      <Label layoutX="92.0" layoutY="193.0" prefHeight="25.0" prefWidth="133.0" text="No Bill for units (by Gov.)" />
+      <TextField fx:id="txtNoBillForUnits" layoutX="239.0" layoutY="193.0" text="0" />
+      <ImageView fx:id="imgNoBillForUnitsValidation" fitHeight="17.0" fitWidth="16.0" layoutX="394.0" layoutY="196.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="179.0" layoutY="237.0" text="Discount" />
       <TextField fx:id="txtDiscount" layoutX="239.0" layoutY="233.0" prefHeight="25.0" prefWidth="38.0" text="0" />
       <Label layoutX="280.0" layoutY="237.0" text="\%" />
+      <ImageView fx:id="imgDiscountValidation" fitHeight="17.0" fitWidth="16.0" layoutX="296.0" layoutY="237.0" pickOnBounds="true" preserveRatio="true" />
       <Separator layoutX="155.0" layoutY="258.0" prefHeight="17.0" prefWidth="323.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0">
       </Separator>
       <Button layoutX="191.0" layoutY="273.0" mnemonicParsing="false" onAction="#doBill" prefHeight="25.0" prefWidth="133.0" text="BILL" />
@@ -47,11 +49,9 @@
       <Separator layoutX="10.0" layoutY="297.0" prefHeight="17.0" prefWidth="480.0">
       </Separator>
       <Label layoutX="191.0" layoutY="347.0" prefHeight="17.0" prefWidth="31.0" text="Total" />
-      <TextField fx:id="txtTotal" layoutX="239.0" layoutY="343.0" />
+      <TextField fx:id="txtTotal" disable="true" editable="false" layoutX="239.0" layoutY="343.0" />
       <Label layoutX="177.0" layoutY="381.0" prefHeight="17.0" prefWidth="45.0" text="Net Bill" />
-      <TextField fx:id="txtNetBill" layoutX="239.0" layoutY="377.0" />
-      <ImageView fx:id="imgUnitExemptionValidation" fitHeight="17.0" fitWidth="16.0" layoutX="394.0" layoutY="196.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="imgDiscountValidation" fitHeight="17.0" fitWidth="16.0" layoutX="296.0" layoutY="237.0" pickOnBounds="true" preserveRatio="true" />
-      <TextArea layoutX="20.0" layoutY="466.0" prefHeight="87.0" prefWidth="460.0" text="Note: &#10;1. Rate is fixed to be 10 per kWH&#10;2. If net units consumed &gt; Unit exemption by gov., then no exemption is applicable." />
+      <TextField fx:id="txtNetBill" disable="true" editable="false" layoutX="239.0" layoutY="377.0" />
+      <TextArea layoutX="20.0" layoutY="466.0" prefHeight="87.0" prefWidth="460.0" text="Note: &#10;1. Rate is fixed to be 10 per kWH&#10;2. If units consumed &gt; Unit exemption by gov., then no exemption is applicable." />
    </children>
 </AnchorPane>
