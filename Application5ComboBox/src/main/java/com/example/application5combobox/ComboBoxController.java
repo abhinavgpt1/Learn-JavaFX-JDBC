@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -60,49 +59,52 @@ public class ComboBoxController {
 
     @FXML
     void doShow(ActionEvent event) {
-        // (here) same agenda as doShowSelectedItem
-        // PTR:
-        // Easy validation but less verbose: 
-        // comboItems.getSelectionModel().isEmpty() checks both, if list is empty && if selectedIndex = -1
+        // PTR: Following code checks both list empty and if selectedIndex = -1; Easy validation but less verbose
+        // comboItems.getSelectionModel().isEmpty()
 
         if (comboItems.getItems().isEmpty()) {
-            Alert a = new Alert(Alert.AlertType.ERROR);
-            a.setTitle("List Empty");
-            a.setContentText("Please add something. \ngetSelectedItem = empty string, getSelectedIndex = -1");
-            a.showAndWait();
-            System.out.println("ERROR: performed selection while list was empty.");
+            validationAlert(Alert.AlertType.ERROR, "Empty List", "Empty list! Add something before clicking Show");
+            System.out.println("ERROR: SHOW selected when list was empty.");
             return;
         }
         if (comboItems.getSelectionModel().getSelectedIndex() == -1) {
-            Alert a = new Alert(Alert.AlertType.WARNING);
-            a.setTitle("No Selection or value typed not found.");
-            a.setContentText("Please select something. \ngetSelectedItem = empty string, getSelectedIndex = -1");
-            a.showAndWait();
-            System.out.println("WARN: no selection or the value searched not found.");
+            validationAlert(Alert.AlertType.WARNING, "Value Not Found", "Either select something or typed value wasn't found");
+            System.out.println("WARN: SHOW selected, but value not found.");
             return;
         }
-        // PTR:
-        // As soon as you type in the search bar, the getSelectionModel value changes dynamically,
-        // thus fluctuating index from -1 to +ve (if found).
-        String item = comboItems.getSelectionModel().getSelectedItem();
-        int index = comboItems.getSelectionModel().getSelectedIndex();
-        lblItem.setText(item + " - Show btn");
-        lblIndex.setText(index + " - Show btn");
-    }
-
-    @FXML
-    void doShowSelectedItem(ActionEvent event) {
-        // Editable ComboBox executes this function @DeleteAll, and @Show when custom search value is not found - i.e. a lot of glitches. So fix it we can have same validations as doShow() method.
-        // This function works very well without validation for non-editable ComboBox.
-
-        if (comboItems.getSelectionModel().isEmpty()) {
-            System.out.println("Value not selected or list is empty");
-            return;
-        }
+        // PTR: As soon as you type in the search bar, the getSelectionModel value
+        // changes dynamically, thus changing index from -1 to +ve (if found).
         String item = comboItems.getSelectionModel().getSelectedItem();
         int index = comboItems.getSelectionModel().getSelectedIndex();
         lblItem.setText(item);
         lblIndex.setText(String.valueOf(index));
+    }
+
+    @FXML
+    void doShowSelectedItem(ActionEvent event) {
+        // (here) same agenda as doShow()
+        // Editable ComboBox executes doShowSelectedItem
+        // - when Delete All is clicked - getItems is cleared, so maybe that's why
+        // - when Show is clicked after value is entered in ComboBox textField
+        // i.e. there are a lot of glitches. So we can have same validations as doShow() method, or a simpler one mentioned.
+        // This function works very well without validation for non-editable ComboBox.
+
+        if (comboItems.getSelectionModel().isEmpty()) {
+            validationAlert(Alert.AlertType.WARNING, "Value Not Found (Default)", "Value Not Found (Default)");
+            System.out.println("WARN: Value not found (by default) in ComboBox");
+            return;
+        }
+        String item = comboItems.getSelectionModel().getSelectedItem();
+        int index = comboItems.getSelectionModel().getSelectedIndex();
+        lblItem.setText(item + " (Default selection)");
+        lblIndex.setText(index + " (Default selection)");
+    }
+
+    void validationAlert(Alert.AlertType alertType, String title, String context){
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(context);
+        alert.showAndWait();
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -111,7 +113,8 @@ public class ComboBoxController {
         assert lblIndex != null : "fx:id=\"lblIndex\" was not injected: check your FXML file 'ComboBoxView.fxml'.";
         assert lblItem != null : "fx:id=\"lblItem\" was not injected: check your FXML file 'ComboBoxView.fxml'.";
 
-        // app init
+        // Note: Don't forget to resolve ComboBox<?>
+
         // Way 1: populate ComboBox
         List<String> items = Arrays.asList("Laptop", "Mobile", "Mouse");
         comboItems.setItems(FXCollections.observableArrayList(items));
@@ -120,7 +123,6 @@ public class ComboBoxController {
         // String [] items = {"Laptop", "Mobile", "Mouse"};
         // comboItems.getItems().addAll(items);
 
-        // PTR:
-        // Editable option in ComboBox is used only for searching with the help of getValue() instead of using conventional dropdown button.
+        // PTR: Editable comboBox is used only for searching after/during typing instead of scroll selecting.
     }
 }

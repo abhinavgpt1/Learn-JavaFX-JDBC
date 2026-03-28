@@ -15,8 +15,8 @@
       <Separator layoutX="21.0" layoutY="116.0" prefWidth="209.0" />
       <Label layoutX="34.0" layoutY="132.0" text="Index" />
         <Label fx:id="lblIndex" layoutX="69.0" layoutY="132.0" prefHeight="17.0" prefWidth="143.0" />
+      <Separator layoutX="44.0" layoutY="149.0" prefHeight="3.0" prefWidth="164.0" />
       <Label layoutX="34.0" layoutY="150.0" text="Item" />
         <Label fx:id="lblItem" layoutX="69.0" layoutY="151.0" prefHeight="17.0" prefWidth="143.0" />
-      <Separator layoutX="44.0" layoutY="149.0" prefHeight="3.0" prefWidth="164.0" />
     </children>
 </AnchorPane>
