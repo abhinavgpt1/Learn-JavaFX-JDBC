@@ -28,14 +28,14 @@
             <ToggleGroup fx:id="toggleDiscount" />
          </toggleGroup></RadioButton>
       <RadioButton fx:id="rad20" layoutX="158.0" layoutY="112.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="47.0" text="20%" toggleGroup="$toggleDiscount" />
-      <Separator layoutX="15.0" layoutY="149.0" prefHeight="0.0" prefWidth="245.0" />
-      <Button layoutX="104.0" layoutY="161.0" mnemonicParsing="false" onAction="#doBill" prefHeight="25.0" prefWidth="72.0" text="Bill" />
-      <Label fx:id="txtBill" alignment="CENTER" contentDisplay="CENTER" layoutX="107.0" layoutY="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="55.0" AnchorPane.leftAnchor="107.0" AnchorPane.rightAnchor="107.0" />
-      <TextArea fx:id="txtPostBillingMessage" editable="false" layoutX="27.0" layoutY="229.0" prefHeight="47.0" prefWidth="225.0" wrapText="true" />
       <Button layoutX="213.0" layoutY="110.0" mnemonicParsing="false" onAction="#doClearDiscount" text="Clear">
          <font>
             <Font size="10.0" />
          </font>
       </Button>
+      <Separator layoutX="15.0" layoutY="149.0" prefHeight="0.0" prefWidth="245.0" />
+      <Button layoutX="104.0" layoutY="161.0" mnemonicParsing="false" onAction="#doBill" prefHeight="25.0" prefWidth="72.0" text="Bill" />
+      <Label fx:id="txtBill" alignment="CENTER" contentDisplay="CENTER" layoutX="107.0" layoutY="200.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="55.0" AnchorPane.leftAnchor="107.0" AnchorPane.rightAnchor="107.0" />
+      <TextArea fx:id="txtPostBillingMessage" editable="false" layoutX="27.0" layoutY="229.0" prefHeight="47.0" prefWidth="225.0" wrapText="true" />
    </children>
 </AnchorPane>

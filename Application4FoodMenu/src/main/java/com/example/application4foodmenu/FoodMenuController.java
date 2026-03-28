@@ -5,11 +5,15 @@
 package com.example.application4foodmenu;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import javax.swing.JOptionPane;
+
+import static javax.swing.JOptionPane.QUESTION_MESSAGE;
+import static javax.swing.JOptionPane.YES_NO_CANCEL_OPTION;
 
 public class FoodMenuController {
 
@@ -53,23 +57,72 @@ public class FoodMenuController {
         if(chkPizza.isSelected()) {
             bill += 100;
         }
-        int discountPer = rad10.isSelected() ? 10 : rad20.isSelected() ? 20: 0;
+
+        if(bill == 0) {
+            validationAlert("Select something on menu before billing");
+            return;
+        }
+        // int discountPer = rad10.isSelected() ? 10 : rad20.isSelected() ? 20: 0; // say the list of radio is long, it would be tedious to get discount.
+        // assign userData to the radio at initialization
+        int discountPer = 0;
+        if (toggleDiscount.getSelectedToggle() != null) {
+            discountPer = (int)toggleDiscount.getSelectedToggle().getUserData();
+        }
         float discount = bill * discountPer / 100;
         bill = bill - discount;
 
-        txtBill.setText("Rs. " + bill);
-        txtPostBillingMessage.setText(String.format(CONGRATULATIONS_MSG, discountPer, discount));
+        /**
+         * JOptionPane = used to create standard dialog boxes for displaying
+         * - information (showMessageDialog),
+         * - soliciting input (showInputDialog),
+         * - asking for confirmation (showConfirmDialog)
+         *
+         * ParentComponent = determines the Frame in which the dialog is displayed; 
+         * if null, or if the parentComponent has no Frame, a default Frame is used, and
+         * dialog appears on center of the screen.
+         *
+         * Available MessageType
+         * - ERROR_MESSAGE
+         * - INFORMATION_MESSAGE
+         * - WARNING_MESSAGE
+         * - QUESTION_MESSAGE
+         * - PLAIN_MESSAGE
+         *
+         * Available OptionType
+         * - DEFAULT_OPTION : Ok button maps to value 0
+         * - YES_NO_OPTION : mapping: Yes = 0, No = 1, Cross button = -1
+         * - YES_NO_CANCEL_OPTION : mapping: Yes = 0, No = 1, Cancel = 2, Cross button = -1
+         * - OK_CANCEL_OPTION : mapping: Ok = 0, Cancel = 2
+         * - OK_OPTION ~ YES_NO_OPTION
+         * - NO_OPTION ~ YES_NO_CANCEL_OPTION
+         *
+         * Result:
+         * -------
+         * YES -> 0, OK -> 0
+         * NO -> 1
+         * Cancel -> 2
+         * Cross button -> -1
+         */
+        // blocking call i.e. no interaction with app unless dialog closed
+        int optionSelected = JOptionPane.showConfirmDialog(null, "Proceed with billing?", "Billing Confirmation", YES_NO_CANCEL_OPTION, QUESTION_MESSAGE);
+        System.out.println("Option selected on billing confirmation: " + optionSelected);
+        if (optionSelected == 0) { // OK or Yes
+            txtBill.setText("Rs. " + bill);
+            txtPostBillingMessage.setText(String.format(CONGRATULATIONS_MSG, discountPer, discount));
+        }
     }
 
     @FXML
     void doChkAll(ActionEvent event) {
-        chkBurger.setSelected(chkAll.isSelected()); // IMP: can't just set it to true
+        // IMP: can't just set it to true since "All" checkbox can be either selected or deselected.
+        chkBurger.setSelected(chkAll.isSelected());
         chkPizza.setSelected(chkAll.isSelected());
     }
 
     @FXML
     void doClearDiscount(ActionEvent event) {
-        // check if any radio button is selected.
+        // Set false to only the one which is selected. This is better instead of iterating over all toggles and marking them false.
+        // FYI, toggleGroup ensures all radio are tied up, and after doClearDiscount() no radio will be selected.
         if(toggleDiscount.getToggles().stream().anyMatch(Toggle::isSelected)) { // = anyMatch(radio -> radio.isSelected())
             toggleDiscount.getSelectedToggle().setSelected(false);
         }
@@ -96,6 +149,13 @@ public class FoodMenuController {
         System.out.println("This function works for rad10 only when it is unselected. Don't use it for deselection.");
     }
 
+    void validationAlert(String context){
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Wrong Input");
+        alert.setContentText(context);
+        alert.show();
+    }
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert chkAll != null : "fx:id=\"chkAll\" was not injected: check your FXML file 'FoodMenuView.fxml'.";
@@ -107,7 +167,11 @@ public class FoodMenuController {
         assert txtBill != null : "fx:id=\"txtBill\" was not injected: check your FXML file 'FoodMenuView.fxml'.";
         assert txtPostBillingMessage != null : "fx:id=\"txtPostBillingMessage\" was not injected: check your FXML file 'FoodMenuView.fxml'.";
 
-        // app init
-        txtPostBillingMessage.setEditable(false); // redundant here since it's set in fxml. But it's imp to know Disable != Editable.
+        // Assign values to radio buttons to apply discount efficiently
+        rad10.setUserData(10);
+        rad20.setUserData(20);
+
+        // redundant here since it's set in fxml. But it's imp to know Disable != Editable.
+        txtPostBillingMessage.setEditable(false);
     }
 }
