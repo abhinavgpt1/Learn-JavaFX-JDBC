@@ -44,12 +44,24 @@ import java.sql.SQLException;
 
 public class TestConnection {
     public static void main(String[] args) {
-        // IMP.: Make sure to gracefully disconnect db connection(s).
+        /**
+         * [IMP] Make sure to gracefully disconnect db connection(s).
+         * - Resource Exhaustion: Every open connection consumes system resources, including memory (RAM), network sockets, and file descriptors on both the application and database servers.
+         * - "Too Many Connections" Errors: Databases have a hard limit on simultaneous connections (e.g., the max_connections setting in MySQL). Once this limit is reached, the database will reject all new connection requests, effectively crashing your application's ability to interact with data.
+         * - Database Locks: Unclosed connections can hold onto active transactions or table locks. This can prevent other users from updating data, leading to "deadlocks" or hanging processes across your entire system.
+         *
+         * Best practices:
+         * ---------------
+         * Use Try-With-Resources (Java 8+): This automatically closes the connection, statement, and result set when the block finishes, even if an error occurs.
+         * Explicitly Close in finally Blocks: If not using try-with-resources, always use a finally block to ensure close() is called regardless of whether the code succeeded or threw an exception.
+         * Use Connection Pooling: While pools can still leak, they often include "leak detection" features that log a warning or force-close connections that have been open for too long.
+         */
 
         // Class.forName("com.mysql.cj.jdbc.Driver"); // no need to load drivers
         // No need to load class `com.mysql.jdbc.Driver' because
-        // 1. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
-        // 2. also, the new driver class is `com.mysql.cj.jdbc.Driver' :')
+        // 1. The driver is automatically registered via the SPI (Service Provider Mechanism) and manual loading of the driver class is generally unnecessary.
+        // - JDBC 4.0 compliant drivers contain a specific configuration file in their JAR file (META-INF/services/java.sql.Driver). This file tells the JVM which Driver class to load.
+        // 2. also, the new driver class is `com.mysql.cj.jdbc.Driver'
 
         // QQ- what's the point of Class.forName()
         // Ans- loads the class - https://stackoverflow.com/questions/15039265/what-exactly-does-this-do-class-fornamecom-mysql-jdbc-driver-newinstance
@@ -59,7 +71,7 @@ public class TestConnection {
         // eg. <dependency><groupId>com.mysql</groupId><artifactId>mysql-connector-j</artifactId><version>8.0.33</version></dependency>
 
         // QQ- PreparedStatement vs CallableStatement?
-        // Ans- PreparedStatement is used to execute parameterized SQL queries, while CallableStatement is used to execute stored procedures in the database.
+        // Ans- PreparedStatement is used to execute parameterized SQL queries, while CallableStatement is used to execute stored procedures in the database with an add-on functionality of IN, OUT, INOUT params.
         // ref: https://www.geeksforgeeks.org/java/difference-between-preparedstatement-and-callablestatement/
 
         try (Connection connection = DBConnectionFactory.getConnection(Database.POSTGRES)) {
