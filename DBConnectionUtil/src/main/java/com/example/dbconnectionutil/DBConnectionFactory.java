@@ -1,26 +1,28 @@
 package com.example.dbconnectionutil;
 
+import com.example.dbconnectionutil.dbconnection.DBConnection;
+import com.example.dbconnectionutil.dbconnection.MySQLConnection;
+import com.example.dbconnectionutil.dbconnection.PostgreSQLConnection;
+import com.example.dbconnectionutil.dbconnection.SQLServerConnection;
+
 import java.sql.Connection;
 
-enum Database {
-    MYSQL, POSTGRES, SQLSERVER
-}
 public class DBConnectionFactory {
     public static Connection getConnection(Database database) {
-        String dbConfigFilePathRootRelative;
+        String dbConfigFileName;
         switch (database) {
             case MYSQL:
-                dbConfigFilePathRootRelative = MySQLConnection.DB_CONFIG_RELATIVE_FILE_PATH;
+                dbConfigFileName = MySQLConnection.DB_CONFIG_FILE_NAME;
                 break;
             case POSTGRES:
-                dbConfigFilePathRootRelative = PostgreSQLConnection.DB_CONFIG_RELATIVE_FILE_PATH;
+                dbConfigFileName = PostgreSQLConnection.DB_CONFIG_FILE_NAME;
                 break;
             case SQLSERVER:
-                dbConfigFilePathRootRelative = SQLServerConnection.DB_CONFIG_RELATIVE_FILE_PATH;
+                dbConfigFileName = SQLServerConnection.DB_CONFIG_FILE_NAME;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown database: " + database);
         }
-        return DBConnection.getConnection(dbConfigFilePathRootRelative);
+        return DBConnection.getConnection(dbConfigFileName);
     }
 }

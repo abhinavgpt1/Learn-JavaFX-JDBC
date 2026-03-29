@@ -42,7 +42,7 @@ import java.sql.SQLException;
  * FYI: this module was created as JavaFX project (in order to have pom dependencies). Later, javafx plugin and libraries were removed.
  */
 
-public class Main {
+public class TestConnection {
     public static void main(String[] args) {
         // IMP.: Make sure to gracefully disconnect db connection(s).
 
@@ -63,6 +63,10 @@ public class Main {
         // ref: https://www.geeksforgeeks.org/java/difference-between-preparedstatement-and-callablestatement/
 
         try (Connection connection = DBConnectionFactory.getConnection(Database.POSTGRES)) {
+            if (connection == null) {
+                System.out.println("Connection is null.");
+                return;
+            }
             PreparedStatement pst = connection.prepareStatement("select * from trainees");
             ResultSet table = pst.executeQuery();
             while (table.next()) {
@@ -71,8 +75,6 @@ public class Main {
                 System.out.println();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
             e.printStackTrace();
         }
         // Not needed since there's try-with-resources
