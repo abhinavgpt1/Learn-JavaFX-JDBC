@@ -2,7 +2,7 @@
  * Sample Skeleton for 'StudentRecordsView.fxml' Controller Class
  */
 
-package com.example.application10studentrecordsusingjdbc;
+package com.example.application9studentrecordsusingjdbc;
 
 import java.net.URL;
 import java.sql.*;
@@ -234,9 +234,9 @@ public class StudentRecordsController {
         assert txtPercentage != null : "fx:id=\"txtPercentage\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
         assert txtRollNumber != null : "fx:id=\"txtRollNumber\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
 
-        // app and db init
-        // connect to db and create table if not created
-        connection = DBConnection.doConnect();
-        DBConnection.createStudentsTableIfNotExists(connection);
+//        // app and db init
+//        // connect to db and create table if not created
+//        connection = DBConnection.doConnect();
+//        DBConnection.createStudentsTableIfNotExists(connection);
     }
 }

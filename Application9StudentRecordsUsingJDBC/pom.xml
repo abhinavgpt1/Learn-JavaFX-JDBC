@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>Application10StudentRecordsUsingJDBC</artifactId>
+    <artifactId>Application9StudentRecordsUsingJDBC</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Application10StudentRecordsUsingJDBC</name>
+    <name>Application9StudentRecordsUsingJDBC</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -66,7 +66,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.application10studentrecordsusingjdbc/com.example.application10studentrecordsusingjdbc.Main
+                                com.example.application9studentrecordsusingjdbc/com.example.application9studentrecordsusingjdbc.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

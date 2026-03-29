@@ -1,4 +1,4 @@
-package com.example.application10studentrecordsusingjdbc;
+package com.example.application9studentrecordsusingjdbc;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

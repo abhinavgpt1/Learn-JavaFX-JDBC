@@ -1,4 +1,4 @@
-package com.example.application10studentrecordsusingjdbc;
+package com.example.application9studentrecordsusingjdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,7 @@ public class DBConnection {
     private static final String PASSWORD = "";
 
     public static Connection doConnect(){
-        Connection connection = null;
+        Connection connection;
         try {
             connection = DriverManager.getConnection(CONNECTION_URL, USERNAME, PASSWORD);
             return connection;
