@@ -1,7 +1,13 @@
+# folders
 .idea
 .mvn
+target
 
+# files
 mvnw
 mvnw.cmd
 myvmoptions.txt
 .class
+mysql-xampp-dbconfig.json
+postgresql-dbconfig.json
+sqlserver-dbconfig.json
