@@ -35,3 +35,7 @@ A - You just need to explicitly tell Maven to look for resources inside your jav
     </resources>
 </build>
 ```
+
+### Note
+* The JavaFX jdbc apps don't mention database name. So, make sure to have database name in connection strings (dbconfigs).
+* Check MySQLConnection.java: Why it isn't singleton, and why connection pool is better than legacy DriverManager.getConnection() way.

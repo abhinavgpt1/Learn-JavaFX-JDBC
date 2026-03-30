@@ -2,7 +2,7 @@ package com.example.dbconnectionutil.dbconnection;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-class DatabaseConfigMapper {
+class DatabaseConfig {
     // Note:
     // - Fields need to be public for successful mapping
     // - JsonProperty can be used to map customField name in .json to POJO. If not present, then field with same name is searched in json.

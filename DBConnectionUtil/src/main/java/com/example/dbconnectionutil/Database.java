@@ -1,5 +1,5 @@
 package com.example.dbconnectionutil;
 
-enum Database {
+public enum Database {
     MYSQL, POSTGRES, SQLSERVER
 }

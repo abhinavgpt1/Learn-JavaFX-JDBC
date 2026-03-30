@@ -95,3 +95,18 @@ public class TestConnection {
         // }
     }
 }
+
+/**
+ * Output (MySQL):
+ * ---------------
+ * 65.0, Aman,
+ * 80.0, Raman,
+ * 99.0, Chaman,
+ * 98.0, Daman,
+ * 79.0, Param,
+ *
+ * Output (PostgreSQL):
+ * --------------------
+ * 65.0, Rahul,
+ * 80.0, Raghav,
+ */
