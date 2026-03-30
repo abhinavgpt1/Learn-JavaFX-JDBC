@@ -1,8 +1,15 @@
 -- Access PhpMyAdmin for MySQL. Make sure to start Apache since MySQL requires it.
 -- Link: http://localhost:8080/phpmyadmin/
+/*
+Although SQL is case-insensitive, but there's a convention for naming in DBMS:
+- database: pascal, eg. learn_javafx
+- table: pascal (plural), eg. trainees, product_prices
+- column: pascal, eg. first_name
+- SQL commands: ALL CAPS eg. SELECT, INSERT, ROW_NUMBER
+*/
 
-CREATE DATABASE IF NOT EXISTS learnjavafx;
-USE learnjavafx;
+CREATE DATABASE IF NOT EXISTS learn_javafx;
+USE learn_javafx;
 
 CREATE TABLE trainees (
     rollno INT PRIMARY KEY,
@@ -175,3 +182,12 @@ DROP TABLE trainees;
 -- Current version of MariaDB in XAMPP - 10.4.13-MariaDB
 -- It is advised to not have different server for MySQL and MariaDB due to changes in connection strings and configs.
 -- MariaDB is largely compatible with MySQL's APIs and commands, meaning you can generally use MySQL connectors to connect to it.
+
+/*
+Rule: in case of primitives, for null db column/value,
+    - resultSet.get<DataType> function -> default value eg. 0, 0.0, false
+    - resultSet.getString -> null
+    - preparedStatement.setString("") will give error -> convert this value to null. For database, nullable float is either null, or a valid float.
+Rule: in case of objects, for null db column/value, rs.getString() returns null.
+    Need to check how getInt()/getFloat() would behave.
+*/

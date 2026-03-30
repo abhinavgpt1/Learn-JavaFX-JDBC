@@ -17,6 +17,8 @@ NOTE: Javafx came with Java 8, but now you need to follow
 ```
 --module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml
 ```
+6. Maven compiler configs can override IDE's java version. So, keep check that maven-compiler-plugin = 24
+7. For JavaFX JDBC codes, make sure to remove fx:controller in fxml to tie DB Connection & Controller with Main.
 
 NOTE: 
 1. VM Options (passed to JVM) != Program args (passed to application)

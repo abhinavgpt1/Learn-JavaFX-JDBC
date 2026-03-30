@@ -74,6 +74,9 @@ public class TestConnection {
         // Ans- PreparedStatement is used to execute parameterized SQL queries, while CallableStatement is used to execute stored procedures in the database with an add-on functionality of IN, OUT, INOUT params.
         // ref: https://www.geeksforgeeks.org/java/difference-between-preparedstatement-and-callablestatement/
 
+        // FYI, declare connection, PreparedStatement and Result all in try-with-resources.
+        // Reason: Generally, closing connection closes child statements (as seen in File handling BIS/BR), but sometimes this can fail or delay cleanup.
+        // This results in Cursor Exhaustion in your database, causing your queries to randomly fail with "Maximum open cursors exceeded" errors.
         try (Connection connection = DBConnectionFactory.getConnection(Database.POSTGRES)) {
             if (connection == null) {
                 System.out.println("Connection is null.");
