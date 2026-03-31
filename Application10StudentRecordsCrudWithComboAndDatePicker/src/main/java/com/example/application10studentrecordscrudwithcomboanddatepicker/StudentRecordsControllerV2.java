@@ -1,8 +1,8 @@
 /**
- * Sample Skeleton for 'StudentRecordsView.fxml' Controller Class
+ * Sample Skeleton for 'StudentRecordsViewV2.fxml' Controller Class
  */
 
-package com.example.application9studentrecordsusingjdbc;
+package com.example.application10studentrecordscrudwithcomboanddatepicker;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,20 +10,24 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
-public class StudentRecordsController {
+public class StudentRecordsControllerV2 {
 
     // Connection isn't static since there can be multiple instances of this app.
     private final Connection connection;
-    StudentRecordsController(Connection connection) {
+    StudentRecordsControllerV2(Connection connection) {
         this.connection = connection;
     }
 
@@ -33,6 +37,12 @@ public class StudentRecordsController {
     @FXML // URL location of the FXML file that was given to the FXMLLoader
     private URL location;
 
+    @FXML // fx:id="comboRollNumber"
+    private ComboBox<String> comboRollNumber; // Value injected by FXMLLoader
+
+    @FXML // fx:id="dtpDateOfAdmission"
+    private DatePicker dtpDateOfAdmission; // Value injected by FXMLLoader
+
     @FXML // fx:id="lblResult"
     private Label lblResult; // Value injected by FXMLLoader
 
@@ -41,9 +51,6 @@ public class StudentRecordsController {
 
     @FXML // fx:id="txtPercentage"
     private TextField txtPercentage; // Value injected by FXMLLoader
-
-    @FXML // fx:id="txtRollNumber"
-    private TextField txtRollNumber; // Value injected by FXMLLoader
 
     /**
      * Although SQL is case-insensitive, but there's a convention for naming in DBMS:
@@ -85,7 +92,23 @@ public class StudentRecordsController {
         }
     }
 
-    public boolean isNumber(String value){
+    public void populateComboBoxWithAvailableRollNumbers() {
+        String getAllRollNumbers = "SELECT roll_number FROM students";
+        try {
+            PreparedStatement ps = connection.prepareStatement(getAllRollNumbers);
+            ResultSet rs = ps.executeQuery();
+            List<String> studentRollNumberList = new ArrayList<>();
+            while(rs.next()) {
+                studentRollNumberList.add(rs.getString("roll_number"));
+            }
+            comboRollNumber.getItems().addAll(studentRollNumberList); // or use setItems(FXCollections)
+            System.out.println("INFO: Populated all Roll numbers in combo box from database");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isNumber(String value) {
         try {
             Float.parseFloat(value); // Not Integer.parseInt() since it can be decimal
             return true;
@@ -95,15 +118,16 @@ public class StudentRecordsController {
         }
     }
 
-    public boolean isRollNumberElseAlert(){
-        if(!isNumber(txtRollNumber.getText())) {
+    public boolean isRollNumberElseAlert() {
+        // Note: value typed in editable ComboBox's search field is treated as a selected item, even if not found.
+        if(!isNumber(comboRollNumber.getSelectionModel().getSelectedItem())) {
             showAlert("Invalid Roll Number", "Please enter a valid number for Roll number", Alert.AlertType.ERROR);
             return false;
         }
         return true;
     }
 
-    public boolean isNameElseAlert(){
+    public boolean isNameElseAlert() {
         // 1. string with all spaces is not allowed - used isBlank()
         // (optional) 2. Can check english letters only using regx - or identify a way to check if chars are human-readable lang, say hindi, french.
         if(txtName.getText() == null || txtName.getText().isBlank()) {
@@ -113,13 +137,41 @@ public class StudentRecordsController {
         return true;
     }
 
-    public boolean isPercentageElseAlert(){
+    public boolean isPercentageElseAlert() {
         // As per table schema, percentage = null by default. So, if it's empty, or just spaces / blank, or null, it's fine.
         if (txtPercentage.getText() == null || txtPercentage.getText().isBlank())
             return true;
 
         if(!isNumber(txtPercentage.getText())) {
             showAlert("Invalid percentage", "Please fill a valid percentage containing digits and decimal", Alert.AlertType.ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isDate_NotNeeded(String date) {
+        // DatePicker displays date in dd/mm/yyyy format, hence this validation is done accordingly.
+        // [Update] dtpDateOfAdmission.getValue() returns null if date is invalid. So it is sufficient to test date.
+        try {
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return true;
+        } catch (DateTimeParseException | NullPointerException e) {
+            System.out.println(date + " isn't a valid date");
+            return false;
+        }
+    }
+
+    public boolean isDateElseAlert(){
+        // Tip: Better have non-editable DatePicker, else everytime validation like this is needed.
+        // - doSave() code reduces to just this - Date.valueOf(dtpDateOfAdmission.getValue())
+
+        // As per table schema, doa = CURRENT_TIMESTAMP by default. So, if it's empty / blank (just spaces) / null, it's fine.
+        if (dtpDateOfAdmission.getEditor().getText() == null || dtpDateOfAdmission.getEditor().getText().isBlank())
+            return true;
+
+        // dtpDateOfAdmission.getValue() is null if date is null/empty/blank/invalid
+        if (dtpDateOfAdmission.getValue() == null) {
+            showAlert("Invalid date", "Please pick a valid date or fill in format dd/mm/yyyy", Alert.AlertType.ERROR);
             return false;
         }
         return true;
@@ -132,6 +184,7 @@ public class StudentRecordsController {
         alert.show();
     }
 
+    private
     @FXML
     void doConsoleAllStudents(ActionEvent event) {
         String getAllStudents = "SELECT * FROM students";
@@ -165,7 +218,7 @@ public class StudentRecordsController {
     void doDelete(ActionEvent event) {
         if (!isRollNumberElseAlert())
             return;
-        int rollNumber = Integer.parseInt(txtRollNumber.getText());
+        int rollNumber = Integer.parseInt(comboRollNumber.getSelectionModel().getSelectedItem());
 
         // JOptionPane is old, use Alert Confirmation.
         // FYI, it returns Optional<ButtonType> unlike TextInputDialog which returns Optional<String>
@@ -186,6 +239,7 @@ public class StudentRecordsController {
                 System.out.println("INFO: Student record deleted with roll number " + rollNumber);
                 txtName.setText("");
                 txtPercentage.setText("");
+                dtpDateOfAdmission.getEditor().setText("");
                 lblResult.setText("Student record deleted");
                 showAlert("Student Record Deleted", "Student record deleted for Roll number " + rollNumber, Alert.AlertType.INFORMATION);
             } else {
@@ -203,8 +257,8 @@ public class StudentRecordsController {
         if(!isRollNumberElseAlert())
             return;
 
-        String getStudentDetails = "SELECT * FROM students WHERE roll_number = ?";
-        int rollNumber = Integer.parseInt(txtRollNumber.getText());
+        String getStudentDetails = "SELECT * FROM students where roll_number = ?";
+        int rollNumber = Integer.parseInt(comboRollNumber.getSelectionModel().getSelectedItem());
         try {
             PreparedStatement ps = connection.prepareStatement(getStudentDetails);
             ps.setInt(1, rollNumber);
@@ -213,14 +267,19 @@ public class StudentRecordsController {
             while(studentDetails.next()) {
                 String name = studentDetails.getString("name");
                 String percentage = studentDetails.getString("percentage"); // getFloat returns 0.0, and Update btn would update DB column from null to 0.0
+                Date dateOfAdmission = studentDetails.getDate("date_of_admission");
                 numRows++;
                 txtName.setText(name);
-                txtPercentage.setText(percentage == null ? "" : percentage);
+                txtPercentage.setText(percentage);
+                dtpDateOfAdmission.setValue(dateOfAdmission.toLocalDate());
+                // dtpDateOfAdmission.getEditor().setText("abc"); // getEditor() returns TextField, so literally we can setText anything - which is WRONG from UI/UX perspective
+                // A valid date won't be selected on the datepicker otherwise.
             }
 
             if (numRows == 0) {
                 txtName.setText("");
                 txtPercentage.setText("");
+                dtpDateOfAdmission.getEditor().setText("");
                 lblResult.setText("Student record not found");
                 showAlert("Student Not Found", "No student record found for Roll Number: " + rollNumber, Alert.AlertType.ERROR);
             }
@@ -231,22 +290,27 @@ public class StudentRecordsController {
 
     @FXML
     void doSave(ActionEvent event) {
-        if (!isRollNumberElseAlert() || !isNameElseAlert() || !isPercentageElseAlert())
+        if (!isRollNumberElseAlert() || !isNameElseAlert() || !isPercentageElseAlert() || !isDateElseAlert())
             return;
 
-        String insertStudentDetails = "INSERT INTO students (roll_number, name, percentage, date_of_admission) values(?, ?, ?, CURRENT_DATE)";
-        int rollNumber = Integer.parseInt(txtRollNumber.getText());
+        String insertStudentDetails = "INSERT INTO students (roll_number, name, percentage, date_of_admission) values(?, ?, ?, ?)";
+        int rollNumber = Integer.parseInt(comboRollNumber.getSelectionModel().getSelectedItem());
         String name = txtName.getText();
-        String percentage = isNumber(txtPercentage.getText()) ? txtPercentage.getText() : null; // till here perc. is either null, empty, blank, or valid number
+        String percentage = isNumber(txtPercentage.getText()) ? txtPercentage.getText() : null; // till here perc. is null/empty/blank/valid number
+        LocalDate dateOfAdmissionLocalDate = dtpDateOfAdmission.getValue() == null ? LocalDate.now(): dtpDateOfAdmission.getValue(); // till here date is either null/empty/blank/valid date
+        Date dateOfAdmission = Date.valueOf(dateOfAdmissionLocalDate); // java.sql.Date
+
+        // Summary: DTP returns java.util.LocalDate, shows date in format dd/mm/yyyy. java.sql.Date in MySQL accepts LocalDate.
 
         try {
             PreparedStatement ps = connection.prepareStatement(insertStudentDetails);
             ps.setInt(1, rollNumber);
             ps.setString(2, name);
             ps.setString(3, percentage);
+            ps.setDate(4, dateOfAdmission);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 1) {
-                System.out.printf("INFO: Student record created: (%s, %s, %s)\n", rollNumber, name, percentage);
+                System.out.printf("INFO: Student record created: (%s, %s, %s, %s)\n", rollNumber, name, percentage, dateOfAdmission);
                 lblResult.setText("Student record created for roll number " + rollNumber);
                 showAlert("Student Record Created", "Student record created for Roll number " + rollNumber, Alert.AlertType.INFORMATION);
             } else {
@@ -259,7 +323,7 @@ public class StudentRecordsController {
             lblResult.setText("Student with this roll number exists.");
             showAlert("Student Already Exists", "Student with roll number " + rollNumber + " already exists. Please use a different one to save.", Alert.AlertType.ERROR);
         } catch (SQLException e) {
-            System.out.printf("ERROR: Couldn't create student record. (%s, %s, %s): %s\n", rollNumber, name, percentage, e.getMessage());
+            System.out.printf("ERROR: Couldn't create Student record. (%s, %s, %s, %s): %s\n", rollNumber, name, percentage, dateOfAdmission, e.getMessage());
             lblResult.setText("Error creating record");
             showAlert("Unknown Error", "SQLException error, please investigate", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
@@ -268,20 +332,28 @@ public class StudentRecordsController {
 
     @FXML
     void doUpdate(ActionEvent event) {
-        if (!isRollNumberElseAlert() || !isNameElseAlert() || !isPercentageElseAlert())
+        if (!isRollNumberElseAlert() || !isNameElseAlert() || !isPercentageElseAlert() || !isDateElseAlert())
             return;
-        String updateStudentDetails = "UPDATE students SET name = ?, percentage = ? WHERE roll_number = ?";
+
+        // Since dateOfAdmission is not nullable in schema, we can't update it to null
+        String updateStudentDetails = "UPDATE students SET name = ?, percentage = ?, date_of_admission = ? WHERE roll_number = ?";
         String name = txtName.getText();
         String percentage = isNumber(txtPercentage.getText()) ? txtPercentage.getText() : null;
-        int rollNumber = Integer.parseInt(txtRollNumber.getText());
+        if (dtpDateOfAdmission.getValue() == null) {
+            showAlert("Invalid Date for Update", "Please pick a valid date for update in format dd/mm/yyyy", Alert.AlertType.ERROR);
+            return;
+        }
+        Date dateOfAdmission = Date.valueOf(dtpDateOfAdmission.getValue());
+        int rollNumber = Integer.parseInt(comboRollNumber.getSelectionModel().getSelectedItem());
         try {
             PreparedStatement ps = connection.prepareStatement(updateStudentDetails);
             ps.setString(1, name);
             ps.setString(2, percentage);
-            ps.setInt(3, rollNumber);
+            ps.setDate(3, dateOfAdmission);
+            ps.setInt(4, rollNumber);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 1) {
-                System.out.printf("INFO: Student record updated: (%s, %s, %s)\n", rollNumber, name, percentage);
+                System.out.printf("INFO: Student record updated: (%s, %s, %s, %s)\n", rollNumber, name, percentage, dateOfAdmission);
                 lblResult.setText("Student record updated!");
                 showAlert("Student Record Updated", "Student record updated for Roll number " + rollNumber, Alert.AlertType.INFORMATION);
             } else {
@@ -292,17 +364,17 @@ public class StudentRecordsController {
         } catch (SQLException e) {
             // No SQLIntegrityConstraintViolationException occurs since we're updating a record not inserting new.
             // So, no PK / index violation, therefore no SQLIntegrityConstraintViolationException.
-            showAlert("Unknown Error", "SQLException error, please investigate" + rollNumber, Alert.AlertType.ERROR);
             throw new RuntimeException(e);
         }
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
-        assert lblResult != null : "fx:id=\"lblResult\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
-        assert txtName != null : "fx:id=\"txtName\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
-        assert txtPercentage != null : "fx:id=\"txtPercentage\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
-        assert txtRollNumber != null : "fx:id=\"txtRollNumber\" was not injected: check your FXML file 'StudentRecordsView.fxml'.";
+        assert comboRollNumber != null : "fx:id=\"comboRollNumber\" was not injected: check your FXML file 'StudentRecordsViewV2.fxml'.";
+        assert dtpDateOfAdmission != null : "fx:id=\"dtpDateOfAdmission\" was not injected: check your FXML file 'StudentRecordsViewV2.fxml'.";
+        assert lblResult != null : "fx:id=\"lblResult\" was not injected: check your FXML file 'StudentRecordsViewV2.fxml'.";
+        assert txtName != null : "fx:id=\"txtName\" was not injected: check your FXML file 'StudentRecordsViewV2.fxml'.";
+        assert txtPercentage != null : "fx:id=\"txtPercentage\" was not injected: check your FXML file 'StudentRecordsViewV2.fxml'.";
 
         // Note: Add DBConnectionUtil package dependency in pom
 
@@ -326,5 +398,17 @@ public class StudentRecordsController {
         }
         // Create table if it doesn't exist
         createStudentsTableIfNotExists();
+        populateComboBoxWithAvailableRollNumbers();
+        /**
+         * QQ - Why getSelectedIndex() = -1 ALWAYS for any selection I make in the ComboBox<Integer>, but not for ComboBox<String>?
+         * Ans - This behavior occurs because JavaFX's ComboBox uses the equals() method to determine the selected index.
+         * When you use a ComboBox<String>, the string you type or select is compared to the items in the list using String.equals(), which works as expected.
+         * However, with a ComboBox<Integer>, if you type a number into the editable ComboBox, the value is a String, not an Integer.
+         * When you call getSelectionModel().getSelectedIndex(), JavaFX tries to find an Integer in the list that equals the typed String, which always fails, so it returns -1.
+         *
+         * Summary:
+         * For ComboBox<String>, the typed value matches the list items by value.
+         * For ComboBox<Integer>, the typed value is a String, but the list contains Integer objects, so no match is found, and the selected index is -1.
+         */
     }
 }
