@@ -34,7 +34,7 @@ public class Main extends Application {
     public void stop() throws Exception {
         super.stop();
         if (connection != null) {
-            System.out.println("Terminating database connection");
+            System.out.println("INFO: Closing DB connection gracefully...");
             connection.close();
         }
     }

@@ -309,6 +309,15 @@ public class StudentRecordsController {
         // - Removed fx:controller in FXML, since .load() gives error
         //      * fxmlLoader in Main is associated to controller twice.
 
+        try {
+            if (connection == null || connection.isClosed()) {
+                showAlert("Database Connection Failed", "Failed to establish database connection. Please check the issue.", Alert.AlertType.ERROR);
+            } else {
+                System.out.println("INFO: Database connection established successfully.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         // Create table if it doesn't exist
         createStudentsTableIfNotExists();
     }
