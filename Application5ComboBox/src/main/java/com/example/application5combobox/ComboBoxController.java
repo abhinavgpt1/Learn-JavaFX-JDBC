@@ -59,8 +59,17 @@ public class ComboBoxController {
 
     @FXML
     void doShow(ActionEvent event) {
-        // PTR: Following code checks both list empty and if selectedIndex = -1; Easy validation but less verbose
-        // comboItems.getSelectionModel().isEmpty()
+        // PTR: Following code checks
+        // - if comboBox list empty -> show alert and return
+        // - if value in comboBox search bar is not found -> show alert and return
+        //
+        // PTR: As you type in combo box search, the getSelectionModel updates item and index dynamically:
+        // - getSelectedIndex() changes from -1 to +ve (if found).
+        // - getSelectedItem() changes from empty string to the value typed.
+
+        // PTR: if the value typed doesn't exist in comboBox, index = -1, item = value typed
+
+        System.out.println("doShow(): getSelectedIndex: " + comboItems.getSelectionModel().getSelectedIndex() + ", getSelectedItem: " + comboItems.getSelectionModel().getSelectedItem() + ", itemLength: " + comboItems.getSelectionModel().getSelectedItem().length());
 
         if (comboItems.getItems().isEmpty()) {
             validationAlert(Alert.AlertType.ERROR, "Empty List", "Empty list! Add something before clicking Show");
@@ -72,8 +81,6 @@ public class ComboBoxController {
             System.out.println("WARN: SHOW selected, but value not found.");
             return;
         }
-        // PTR: As soon as you type in the search bar, the getSelectionModel value
-        // changes dynamically, thus changing index from -1 to +ve (if found).
         String item = comboItems.getSelectionModel().getSelectedItem();
         int index = comboItems.getSelectionModel().getSelectedIndex();
         lblItem.setText(item);
@@ -82,13 +89,27 @@ public class ComboBoxController {
 
     @FXML
     void doShowSelectedItem(ActionEvent event) {
-        // (here) same agenda as doShow()
-        // Editable ComboBox executes doShowSelectedItem
+        // This function has same agenda as doShow()
+        // Editable ComboBox executes doShowSelectedItem() with a lot of glitches
         // - when Delete All is clicked - getItems is cleared, so maybe that's why
         // - when Show is clicked after value is entered in ComboBox textField
-        // i.e. there are a lot of glitches. So we can have same validations as doShow() method, or a simpler one mentioned.
         // This function works very well without validation for non-editable ComboBox.
 
+        /**
+         * Theory on how it actually works:
+         * In JavaFX, the onAction event for a ComboBox (specifically ComboBoxBase) is triggered whenever the value property of the ComboBox is changed.
+         * This can happen in several ways, and is not limited to direct user interaction.
+         * - User selection from the dropdown list:
+         *  When a user selects an item from the pop-up list using a mouse click or the Enter key.
+         * - User input in an editable ComboBox:
+         *  If the ComboBox is editable, the action is triggered when the user types a value into the text field and "submits" it, typically by pressing the Enter key.
+         * - Programmatic value changes:
+         * The event is triggered even when the value property is changed programmatically using methods like setValue() or by a binding.
+         */
+
+        System.out.println("doShowSelectedItem(): getSelectedIndex: " + comboItems.getSelectionModel().getSelectedIndex() + ", getSelectedItem: " + comboItems.getSelectionModel().getSelectedItem() + ", itemLength: " + comboItems.getSelectionModel().getSelectedItem().length());
+
+        // An easy way to check if list is empty, or if typed value is not found => comboItems.getSelectionModel().isEmpty()
         if (comboItems.getSelectionModel().isEmpty()) {
             validationAlert(Alert.AlertType.WARNING, "Value Not Found (Default)", "Value Not Found (Default)");
             System.out.println("WARN: Value not found (by default) in ComboBox");
