@@ -1,4 +1,4 @@
-package com.example.application12studenttabulardetailsandexcelexport;
+package com.example.application11studenttabulardetailsandexcelexport;
 
 public class Student {
     // since table isn't editable, so made the fields final.
