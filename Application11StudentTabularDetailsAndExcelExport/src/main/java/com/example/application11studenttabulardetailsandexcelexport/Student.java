@@ -1,16 +1,18 @@
 package com.example.application11studenttabulardetailsandexcelexport;
 
+import java.time.LocalDate;
+
 public class Student {
-    // since table isn't editable, so made the fields final.
+    // Since table isn't editable, so I made the fields final.
     private final int rollNumber;
     private final String name;
-    private final float percentage;
-    private final String dateOfAdmission; // not necessary to be java.sql.Date
+    private final String percentage; // nullable column
+    private final LocalDate dateOfAdmission; // not necessary to be java.sql.Date; better to have as LocalDate since DatePicker gets and set LocalDate.
 
     // Tip: make constructor, getters, setters etc. automatically (based on code editor used)
     // IntelliJ - Right click > Generate > Getters
 
-    public Student(int rollNumber, String name, float percentage, String dateOfAdmission) {
+    public Student(int rollNumber, String name, String percentage, LocalDate dateOfAdmission) {
         this.rollNumber = rollNumber;
         this.name = name;
         this.percentage = percentage;
@@ -25,11 +27,11 @@ public class Student {
         return name;
     }
 
-    public float getPercentage() {
+    public String getPercentage() {
         return percentage;
     }
 
-    public String getDateOfAdmission() {
+    public LocalDate getDateOfAdmission() {
         return dateOfAdmission;
     }
 }

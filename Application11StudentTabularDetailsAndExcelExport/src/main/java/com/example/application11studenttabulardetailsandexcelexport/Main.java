@@ -24,7 +24,7 @@ public class Main extends Application {
         fxmlLoader.setController(controller);
 
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Export Student Details");
+        stage.setTitle("Student Details Table / Export (.csv)");
         stage.setScene(scene);
         stage.show();
     }

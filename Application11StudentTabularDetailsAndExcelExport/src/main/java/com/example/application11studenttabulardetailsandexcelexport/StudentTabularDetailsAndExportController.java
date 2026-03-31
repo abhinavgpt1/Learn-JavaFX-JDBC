@@ -13,10 +13,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ResourceBundle;
 
-import com.example.dbconnectionutil.DBConnectionFactory;
-import com.example.dbconnectionutil.Database;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -83,93 +82,94 @@ public class StudentTabularDetailsAndExportController {
         }
     }
 
-    private void showAlert(String title, String message, Alert.AlertType alertType){
+    public void showAlert(String title, String message, Alert.AlertType alertType){
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setContentText(message);
         alert.show();
     }
 
-    private String getDefaultExcelDumpLocation() {
+    public String getDefaultExcelDumpLocation() {
         String osName = System.getProperty("os.name").toLowerCase();
-        String initialDir;
+        String defaultExcelDumpLocation;
         if (osName.contains("win")) {
-            initialDir = System.getProperty("user.home") + "\\Desktop";
+            defaultExcelDumpLocation = System.getProperty("user.home") + "\\Desktop";
         } else {
-            initialDir = System.getProperty("user.home");
+            defaultExcelDumpLocation = System.getProperty("user.home");
         }
-        return initialDir;
+        return defaultExcelDumpLocation;
     }
     @FXML
     void doExportCSV(ActionEvent event) {
-        FileChooser excelDumpLocation = new FileChooser();
         String desktopPath = getDefaultExcelDumpLocation();
-        excelDumpLocation.setInitialDirectory(new File(desktopPath));
-        excelDumpLocation.setTitle("Save As");
-        excelDumpLocation.getExtensionFilters().addAll(
+
+        FileChooser fileChooserWindow = new FileChooser();
+        fileChooserWindow.setInitialDirectory(new File(desktopPath));
+        fileChooserWindow.setTitle("Save As");
+        fileChooserWindow.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Excel (.csv)", "*.csv"),
                 new FileChooser.ExtensionFilter("All Files", "*.*") // not necessary to provide to user. Instead, we'll have to do validation on extension.
         );
 
 
-        File excelDumpFile = excelDumpLocation.showSaveDialog(null);
-        if (excelDumpFile == null) { // if user closes the Save As dialog box using cross or Cancel button.
+        File excelDumpFile = fileChooserWindow.showSaveDialog(null); // showOpenDialog / showOpenMultipleDialog are also available.
+        if (excelDumpFile == null) { // if user closes the dialog box using cross or Cancel button.
             System.out.println("INFO: Looks like user doesn't want to save the excel yet");
             return;
         }
+
         String excelDumpFilePath = excelDumpFile.getAbsolutePath();
         if(!excelDumpFilePath.toLowerCase().endsWith(".csv")) {
             excelDumpFilePath = excelDumpFilePath + ".csv";
         }
-        File excelFile = new File(excelDumpFilePath);
-        BufferedWriter writer = null;
-        try {
-            writer = new BufferedWriter(new FileWriter(excelFile));
-            writer.write("Roll Number, Name, Percentage, Date of Admission\n"); //\n is Super IMP.
+        // qq - why not append .csv in existing file object?
+        // ans - File objects are immutable; their abstract pathname cannot be changed after creation.
+        excelDumpFile = new File(excelDumpFilePath);
+
+        // Recall: if a file with same name at same path is open, then FileNotFoundException comes: The process cannot access the file because it is being used by another process.
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(excelDumpFile))) {
+            // PTR: adding space anywhere will reflect in cell.
+            writer.write("Roll Number,Name,Percentage,Date of Admission\n"); // \n is IMP. so that data is not in single line
             for(Student student: tblStudents.getItems()) {
-                // PTR: newline \n is important to add
-                writer.write(String.format("%s,%s,%s,%s\n", student.getRollNumber(), student.getName(), student.getPercentage(), student.getDateOfAdmission()));
+                // [IMP]: \n is important to add at the end
+                writer.write(String.format("%s,%s,%s,%s\n", student.getRollNumber(), student.getName(), student.getPercentage(), student.getDateOfAdmission())); // doa's toString is called, and by default it's in ISO standard (yyyy-mm-dd)
             }
             writer.flush(); // flush anything which isn't written yet off buffer.
 
-            // Alert location and success
-            showAlert("Downloaded", "File exported at " + excelDumpFilePath, Alert.AlertType.INFORMATION);
+            System.out.println("INFO: File downloaded successfully at path: " + excelDumpFilePath);
+            // Display location to user and successful operation
+            showAlert("Downloaded", "File downloaded: " + excelDumpFilePath, Alert.AlertType.INFORMATION);
         } catch (IOException e) {
-            showAlert("Error", "File couldn't be downloaded", Alert.AlertType.ERROR);
+            System.out.println("ERROR: File couldn't be downloaded at path: " + excelDumpFilePath + " due to error: " + e.getMessage());
+            showAlert("Unknown Error", "File couldn't be downloaded", Alert.AlertType.ERROR);
             throw new RuntimeException(e);
-        } finally {
-            try {
-                writer.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }
-
-        // PTR: file can be replaced if you select an existing file
-        // PTR: if that file is opened, then it can't be written, and probably you'll face exception = Caused by: java.lang.NullPointerException: Cannot invoke "java.io.BufferedWriter.close()" because "writer" is null.
     }
 
     @FXML
     void doFetchAll(ActionEvent event) {
-        String fetchAllStudents = "SELECT * from Students";
+        String fetchAllStudents = "SELECT * FROM students";
         try {
             PreparedStatement ps = connection.prepareStatement(fetchAllStudents);
             ResultSet studentDetails = ps.executeQuery();
             int rowCount = 0;
-            ObservableList<Student> studentList = FXCollections.observableArrayList();
+            ObservableList<Student> studentList = FXCollections.observableArrayList(); // for setting in TableView
             while(studentDetails.next()) {
-                int roll_number = studentDetails.getInt("roll_number");
+                int rollNumber = studentDetails.getInt("roll_number");
                 String name = studentDetails.getString("name");
-                float percentage = studentDetails.getFloat("percentage");
-                String dateOfAdmission = studentDetails.getString("date_of_admission"); // or use .getDate(), and then convert to String and store in Student object.
-                studentList.add(new Student(roll_number, name, percentage, dateOfAdmission));
+                String percentage = studentDetails.getString("percentage"); // null percentage will show up as 0.0
+                Date dateOfAdmission = studentDetails.getDate("date_of_admission");
+                studentList.add(new Student(rollNumber, name, percentage, dateOfAdmission.toLocalDate()));
                 rowCount++;
             }
 
             if(rowCount == 0) {
+                System.out.println("INFO: No student found in database");
                 showAlert("No student found", "Database has no record of students", Alert.AlertType.INFORMATION);
             } else {
-                tblStudents.setItems(studentList); // does auto-cleaning of table, therefore no append in table.
+                System.out.println("INFO: " + rowCount + " students found in database");
+                tblStudents.setItems(studentList); // sets new data and cleans up prev. one.
+                // tblStudents.getItems().addAll(studentList); would append as you click.
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -180,24 +180,56 @@ public class StudentTabularDetailsAndExportController {
     void initialize() {
         assert tblStudents != null : "fx:id=\"tblStudents\" was not injected: check your FXML file 'StudentTabularDetailsAndExportView.fxml'.";
 
+        // Note: Add DBConnectionUtil package dependency in pom
+
+        // IMP: Since connection closure is needed on app exit,
+        // - created Connection in Main,
+        // - created parameterized constructor of this Controller with connection, and linked it to Main
+        // - Overridden stop() lifecycle function of app inside Main to close this connection.
+        //      * FYI, stop() is called on both, app crash and successful exit.
+        // - Removed fx:controller in FXML, since .load() gives error
+        //      * fxmlLoader in Main is associated to controller twice.
+
+        try {
+            if (connection == null || connection.isClosed()) {
+                System.out.println("ERROR: Database connection is null or closed.");
+                showAlert("Database Connection Failed", "Failed to establish database connection. Please check with the team.", Alert.AlertType.ERROR);
+            } else {
+                System.out.println("INFO: Database connection established successfully.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        // Create table if it doesn't exist
         createStudentsTableIfNotExists();
 
-        // setup table view
-        TableColumn<Student, Integer> roll_numberColumn = new TableColumn<>("Roll Number");
-        roll_numberColumn.setCellValueFactory(new PropertyValueFactory<>("roll_number")); // maps to property in Student.class
+        // Setup TableView
+        // ---------------
+        TableColumn<Student, Integer> rollNumberTableColumn = new TableColumn<>("Roll Number"); // how the column looks in UI.
+        rollNumberTableColumn.setCellValueFactory(new PropertyValueFactory<>("rollNumber")); // maps to property in Student.class
 
-        // Found a bug in developement - naming the getter as getroll_number and not as getroll_number threw exception = java.lang.IllegalStateException: Cannot read from unreadable property roll_number
+        // PTR: Naming the getter as getRollnumber and not getRollNumber threw java.lang.IllegalStateException: Cannot read from unreadable property rollNumber.
+        // Understand: property name is deciphered automatically by removing "get" and converting first letter to lowercase.
+        // getRoll_number/getroll_number -> roll_number
 
-        TableColumn<Student, String> nameColumn = new TableColumn<>("Name");
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Student, String> nameTableColumn = new TableColumn<>("Name");
+        nameTableColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Student, Float> percentageTableColumn = new TableColumn<>("Percentage");
+        percentageTableColumn.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+        TableColumn<Student, String> dateOfAdmissionTableColumn = new TableColumn<>("Date of Admission");
+        dateOfAdmissionTableColumn.setCellValueFactory(new PropertyValueFactory<>("dateOfAdmission"));
 
-        TableColumn<Student, Float> percentageColumn = new TableColumn<>("Percentage");
-        percentageColumn.setCellValueFactory(new PropertyValueFactory<>("percentage"));
+        // Same will be the order at UI.
+        tblStudents.getColumns().addAll(rollNumberTableColumn, nameTableColumn, percentageTableColumn, dateOfAdmissionTableColumn);
 
-        TableColumn<Student, String> dateOfAdmissionColumn = new TableColumn<>("Date of Admission");
-        dateOfAdmissionColumn.setCellValueFactory(new PropertyValueFactory<>("dateOfAdmission"));
-
-        tblStudents.getColumns().clear(); // clearing C1, C2 which are created on scene builder by default. Although it is deleted in FXML for now.
-        tblStudents.getColumns().addAll(roll_numberColumn, nameColumn, percentageColumn, dateOfAdmissionColumn); // same is the order in UI.
+        /**
+         * Further enhancements:
+         * 1. adjust column width of DOA. I have to extend it always to see the heading completely.
+         * 2. remove extra column right side of DOA
+         * 3. add filter + sorting functionality.
+         * 4. Editable column fields.
+         * 5. Alert box with big error needs width adjustment - I think we can do that with setMinWidth(REGION.USE_PREF_SIZE
+         * 6. Export in different format (at least .pdf is a real life use case).
+         */
     }
 }
