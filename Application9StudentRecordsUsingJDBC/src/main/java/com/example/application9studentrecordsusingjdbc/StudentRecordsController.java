@@ -47,10 +47,10 @@ public class StudentRecordsController {
 
     /**
      * Although SQL is case-insensitive, but there's a convention for naming in DBMS:
-     * database: pascal, eg. learn_javafx
-     * table: pascal (plural), eg. trainees, product_prices
-     * column: pascal, eg. first_name
-     * SQL commands: ALL CAPS eg. SELECT, INSERT, ROW_NUMBER
+     * - database: pascal, eg. learn_javafx
+     * - table: pascal (plural), eg. trainees, product_prices
+     * - column: pascal, eg. first_name
+     * - SQL commands: ALL CAPS eg. SELECT, INSERT, ROW_NUMBER
      *
      * CREATE TABLE IF NOT EXISTS students (
      *  roll_number int PRIMARY key,
@@ -67,7 +67,7 @@ public class StudentRecordsController {
      *     - resultSet.get<DataType> function -> default value eg. 0, 0.0, false
      *     - resultSet.getString -> null
      * Note: In db, nullable float is either null, or a valid float.
-     * - preparedStatement.setString("") will give error. So, convert empty TextInputDialog getText() to null before saving.
+     * - preparedStatement.setString("") will give error. So, convert empty txtPercentage.getText() to null before saving.
      */
     public void createStudentsTableIfNotExists(){
         String createStudentsTableIfNotExists = "CREATE TABLE IF NOT EXISTS students (roll_number int PRIMARY key, name varchar(40) NOT NULL, percentage float DEFAULT NULL, date_of_admission DATE NOT NULL DEFAULT CURRENT_TIMESTAMP)";
@@ -76,6 +76,7 @@ public class StudentRecordsController {
             if (rowsAffected == 0) {
                 System.out.println("INFO: Student table exists, or is created");
             } else {
+                showAlert("Database Table Error", "Unknown issue in database. Please check with the team.", Alert.AlertType.ERROR);
                 throw new SQLException("ERROR: Unknown: Table couldn't be created. Please check the issue.");
             }
         } catch (SQLException e) {
@@ -311,7 +312,8 @@ public class StudentRecordsController {
 
         try {
             if (connection == null || connection.isClosed()) {
-                showAlert("Database Connection Failed", "Failed to establish database connection. Please check the issue.", Alert.AlertType.ERROR);
+                showAlert("Database Connection Failed", "Failed to establish database connection. Please check with the team.", Alert.AlertType.ERROR);
+                System.out.println("ERROR: Database connection is null or closed.");
             } else {
                 System.out.println("INFO: Database connection established successfully.");
             }
