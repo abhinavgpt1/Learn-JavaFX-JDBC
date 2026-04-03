@@ -14,6 +14,7 @@
         <junit.version>5.8.2</junit.version>
         <maven.compiler.source>24</maven.compiler.source>
         <maven.compiler.target>24</maven.compiler.target>
+        <javafx.version>24</javafx.version>
     </properties>
 
     <dependencies>
@@ -25,12 +26,12 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>11.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>11.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
 
         <dependency>

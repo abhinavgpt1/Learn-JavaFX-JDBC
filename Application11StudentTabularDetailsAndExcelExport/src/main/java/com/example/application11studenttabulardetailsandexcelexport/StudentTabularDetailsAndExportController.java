@@ -230,6 +230,8 @@ public class StudentTabularDetailsAndExportController {
          * 4. Editable column fields.
          * 5. Alert box with big error needs width adjustment - I think we can do that with setMinWidth(REGION.USE_PREF_SIZE
          * 6. Export in different format (at least .pdf is a real life use case).
+         * 7. App10: Restrict DOA in prev. programs to be not more than current date - all dates after current date should be disabled.
+         * 8. App10: Default select current date in calendar.
          */
     }
 }
