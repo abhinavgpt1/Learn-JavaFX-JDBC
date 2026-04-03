@@ -2,7 +2,7 @@
  * Sample Skeleton for 'EmailView.fxml' Controller Class
  */
 
-package com.example.application13playmediaswitchscreensandemail;
+package com.example.application12playmediaswitchscreensandemail;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -18,7 +18,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;

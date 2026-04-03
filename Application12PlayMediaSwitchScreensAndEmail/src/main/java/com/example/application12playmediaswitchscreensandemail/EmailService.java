@@ -1,4 +1,4 @@
-package com.example.application13playmediaswitchscreensandemail;
+package com.example.application12playmediaswitchscreensandemail;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.example.application13playmediaswitchscreensandemail;
+package com.example.application12playmediaswitchscreensandemail;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

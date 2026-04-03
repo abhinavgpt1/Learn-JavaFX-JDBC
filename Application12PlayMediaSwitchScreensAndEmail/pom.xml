@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>Application13PlayMediaSwitchScreensAndEmail</artifactId>
+    <artifactId>Application12PlayMediaSwitchScreensAndEmail</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Application13PlayMediaSwitchScreensAndEmail</name>
+    <name>Application12PlayMediaSwitchScreensAndEmail</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -76,7 +76,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.application13playmediaswitchscreensandemail/com.example.application13playmediaswitchscreensandemail.Main
+                                com.example.application12playmediaswitchscreensandemail/com.example.application12playmediaswitchscreensandemail.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

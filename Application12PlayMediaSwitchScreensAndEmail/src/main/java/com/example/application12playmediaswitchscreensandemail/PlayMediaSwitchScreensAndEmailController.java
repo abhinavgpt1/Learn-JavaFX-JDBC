@@ -2,7 +2,7 @@
  * Sample Skeleton for 'PlayMediaSwitchScreensAndEmailView.fxml' Controller Class
  */
 
-package com.example.application13playmediaswitchscreensandemail;
+package com.example.application12playmediaswitchscreensandemail;
 
 import java.io.IOException;
 import java.net.URL;
@@ -53,6 +53,10 @@ public class PlayMediaSwitchScreensAndEmailController {
     void playAudioClip(MouseEvent event) {
         // playing audio using MediaPlayer(heavy library) and not AudioClip (light-weight)
         URL audioUrl = getClass().getResource("media/audioclip.mp3");
+        if (audioUrl == null) {
+            System.out.println("Audio file not found: " + audioUrl);
+            throw new RuntimeException("Audio file not found: " + audioUrl);
+        }
         Media audioMedia = new Media(audioUrl.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(audioMedia);
         mediaPlayer.play();
@@ -62,6 +66,10 @@ public class PlayMediaSwitchScreensAndEmailController {
     @FXML
     void playNotification(MouseEvent event) {
         URL audioUrl = getClass().getResource("media/notification.mp3");
+        if (audioUrl == null) {
+            System.out.println("Notification file not found: " + audioUrl);
+            throw new RuntimeException("Notification file not found: " + audioUrl);
+        }
         AudioClip audioClip = new AudioClip(audioUrl.toString());
         audioClip.play();
     }
@@ -69,6 +77,10 @@ public class PlayMediaSwitchScreensAndEmailController {
     @FXML
     void playVideoClip(MouseEvent event) {
         URL videoUrl = getClass().getResource("media/nosoundvideoclip.mp4");
+        if (videoUrl == null) {
+            System.out.println("Video file not found: " + videoUrl);
+            throw new RuntimeException("Video file not found: " + videoUrl);
+        }
         Media videoMedia = new Media(videoUrl.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(videoMedia);
         mdVideoPlayer.setMediaPlayer(mediaPlayer);
