@@ -17,8 +17,21 @@ NOTE: Javafx came with Java 8, but now you need to follow
 ```
 --module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml
 ```
-6. Maven compiler configs can override IDE's java version. So, keep check that maven-compiler-plugin = 24
-7. For JavaFX JDBC codes, make sure to remove fx:controller in fxml to tie DB Connection & Controller with Main.
+6. To use AudioClip, MediaPlayer and MediaView, add javafx.media in --add-modules
+7. Maven compiler configs can override IDE's java version. So, keep check that maven-compiler-plugin = 24
+8. For JavaFX JDBC codes, make sure to remove fx:controller in fxml to tie DB Connection & Controller with Main.
+
+#### 💡 QQ: Why do I need to specify modules in VM options when they're already present in pom.xml?
+
+**A:** This happens because the project is running as an **unnamed module** (meaning it does not have a `module-info.java` file). 
+
+Here is the breakdown of why VM options are required in this setup:
+
+* **JavaFX is no longer bundled:** Ever since Java 11, JavaFX is no longer part of the standard JDK. It is treated as an external set of modules.
+* **Classpath vs. Module-path:** Build tools like Maven download these JavaFX dependencies and put them on the standard classpath. However, because JavaFX libraries are strictly modular, the Java Virtual Machine (JVM) will not automatically look for or load them from the classpath at runtime.
+* **The Fix:** Using VM options like `--module-path` and `--add-modules` explicitly forces the JVM to locate these external components and load them into memory when the application starts.
+
+> 🔗 **Reference:** https://stackoverflow.com/questions/62341158/why-is-add-modules-necessary-for-modules-which-are-on-the-module-path
 
 NOTE: 
 1. VM Options (passed to JVM) != Program args (passed to application)
