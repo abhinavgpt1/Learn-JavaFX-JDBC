@@ -10,7 +10,6 @@ import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.media.AudioClip;
@@ -72,15 +71,23 @@ public class PlayMediaController {
 
     @FXML
     void navigateToEmailPage(MouseEvent event) {
-        // PTR: if a new window is not needed, then switch scenes on the same stage using txtBody.getScene()
+        // PTR: If a new window/stage is not needed, then switch scenes on the same stage using:
+        // - FXML elements eg. (Stage) txtBody.getScene().getWindow() in EmailController.
+        // - Event triggered eg. (Stage) ((Node) event.getSource()).getScene().getWindow()
         try {
-            Parent emailRoot = FXMLLoader.load(getClass().getResource("EmailView.fxml"));
-            Scene emailScene = new Scene(emailRoot);
+            FXMLLoader emailFxmlLoader = new FXMLLoader(getClass().getResource("EmailView.fxml"));
+            Scene emailScene = new Scene(emailFxmlLoader.load());
             Stage stage = new Stage(); // for new window
+            // Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow(); // use same stage
+
             stage.setTitle("Email Orbit");
             stage.setScene(emailScene);
-            stage.initModality(Modality.APPLICATION_MODAL); // doesn't let you open another email window
-            stage.showAndWait();
+
+            // doesn't let you open another email window;
+            // Valid for new stage now. This can't be set once stage has been set visible.
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -101,6 +108,7 @@ public class PlayMediaController {
          * Further enhancements:
          * 1. add button to stop audio
          * 2. add buttons to stop, resume or reset video
+         * 3. On hover of App Password link icon, display a tooltip
          */
     }
 }

@@ -18,6 +18,14 @@ public class Main extends Application {
         stage.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        // 1. Can perform resource cleanups here. eg. db connection closure
+        // 2. if stage.close() is called by a function, then too stop() gets called.
+        System.out.println("Closing the application...");
+    }
+
     public static void main(String[] args) {
         launch();
     }

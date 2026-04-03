@@ -89,8 +89,9 @@ public class EmailController {
 
         CompletableFuture
                 .supplyAsync(() -> EmailService.sendMail(fromMailAddress, appPassword, toMailAddress, subject, body))
-                .thenAccept(errorList -> Platform.runLater(() -> { 
-                    // need to wrap in Platform to show alert (only possible if it's on main thread)
+                .thenAccept(errorList -> Platform.runLater(() -> {
+                    // Platform.runLater(Runnable) is a static method in JavaFX used to execute a task on the JavaFX Application Thread at an unspecified time in the future.
+                    // - JavaFX is a single-threaded framework; only the JavaFX Application Thread can safely modify the "Live" Scene Graph (UI components like labels, buttons, etc.).
                     if (errorList.isEmpty()) {
                         String successfulEmailAlertContext = 
                             "Email sent successfully\n" +
@@ -116,8 +117,10 @@ public class EmailController {
 
     @FXML
     void navigateToMainPage(MouseEvent event) {
+        // Get the stage using FXML elements (as done here) or using triggered event.
+        // eg. (Stage) ((Node) event.getSource()).getScene().getWindow()
         Stage emailStage = (Stage) txtBody.getScene().getWindow();
-        emailStage.close();
+        emailStage.close(); // here we want to close this extra stage. If we'd loaded scene in same stage, then click of back button would close the application
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete

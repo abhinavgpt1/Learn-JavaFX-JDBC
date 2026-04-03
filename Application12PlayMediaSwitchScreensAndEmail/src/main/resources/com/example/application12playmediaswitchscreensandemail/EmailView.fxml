@@ -27,13 +27,13 @@
       <Label layoutX="37.0" layoutY="125.0" text="To :" />
       <TextField fx:id="txtToMailAddress" layoutX="64.0" layoutY="121.0" prefHeight="25.0" prefWidth="157.0" promptText="eg. larrypage@gmail.com" />
       <Separator layoutX="228.0" layoutY="86.0" orientation="VERTICAL" prefHeight="63.0" prefWidth="0.0" />
+      <TextArea fx:id="txtAppPassword" layoutX="238.0" layoutY="104.0" prefHeight="45.0" prefWidth="105.0" promptText="Enter app pwd not gmail pwd" wrapText="true" />
       <Label alignment="CENTER" layoutX="242.0" layoutY="83.0" prefHeight="17.0" prefWidth="81.0" text="App Password" />
       <ImageView fitHeight="17.0" fitWidth="13.0" layoutX="324.0" layoutY="84.0" onMouseClicked="#learnAboutAppPassword" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@media/hyperlink.png" />
          </image>
       </ImageView>
-      <TextArea fx:id="txtAppPassword" layoutX="238.0" layoutY="104.0" prefHeight="45.0" prefWidth="105.0" promptText="Enter app pwd not gmail pwd" wrapText="true" />
       <TextArea fx:id="txtSubject" layoutX="24.0" layoutY="163.0" prefHeight="45.0" prefWidth="321.0" promptText="Subject" wrapText="true" />
       <TextArea fx:id="txtBody" layoutX="25.0" layoutY="223.0" prefHeight="109.0" prefWidth="321.0" promptText="Body" wrapText="true" />
     </children>
