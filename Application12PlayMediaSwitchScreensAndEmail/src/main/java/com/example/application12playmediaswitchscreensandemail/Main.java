@@ -10,9 +10,10 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("PlayMediaSwitchScreensAndEmailView.fxml"));
+        // startup screen for us is the PlayMediaView.fxml. Later a button redirects to EmailView.
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("PlayMediaView.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Play Media and Mail!");
+        stage.setTitle("Play Audio, Video and Email");
         stage.setScene(scene);
         stage.show();
     }

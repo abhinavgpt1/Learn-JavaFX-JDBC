@@ -20,7 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.media.MediaView;
 
-public class PlayMediaSwitchScreensAndEmailController {
+public class PlayMediaController {
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;

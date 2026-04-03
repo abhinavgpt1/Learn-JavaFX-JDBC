@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-
 <?import javafx.scene.media.MediaView?>
-<?import javafx.geometry.Rectangle2D?>
-<AnchorPane prefHeight="347.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application12playmediaswitchscreensandemail.PlayMediaSwitchScreensAndEmailController">
+
+<AnchorPane prefHeight="347.0" prefWidth="362.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.application12playmediaswitchscreensandemail.PlayMediaController">
     <children>
         <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="38.0" layoutY="30.0" onMouseClicked="#playNotification" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -21,12 +21,12 @@
             </image>
         </ImageView>
       <Label alignment="CENTER" layoutX="104.0" layoutY="87.0" prefHeight="17.0" prefWidth="87.0" text="Audio" />
-        <Label alignment="CENTER" layoutX="208.0" layoutY="87.0" prefHeight="17.0" prefWidth="44.0" text="Video" />
       <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="202.0" layoutY="30.0" onMouseClicked="#playVideoClip" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@media/video.png" />
          </image>
       </ImageView>
+        <Label alignment="CENTER" layoutX="208.0" layoutY="87.0" prefHeight="17.0" prefWidth="44.0" text="Video" />
       <ImageView fitHeight="40.0" fitWidth="42.0" layoutX="286.0" layoutY="35.0" onMouseClicked="#navigateToEmailPage" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@media/email.png" />
