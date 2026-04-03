@@ -13,12 +13,12 @@
     <children>
       <ImageView fitHeight="34.0" fitWidth="36.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#navigateToMainPage" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@back.png" />
+            <Image url="@media/back.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="45.0" fitWidth="43.0" layoutX="160.0" layoutY="22.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="159.33333333333337">
          <image>
-            <Image url="@google.png" />
+            <Image url="@media/google.png" />
          </image>
       </ImageView>
       <Button layoutX="300.0" layoutY="18.0" mnemonicParsing="false" onAction="#doSendMail" text="Send" />
@@ -31,7 +31,7 @@
       <Label alignment="CENTER" layoutX="242.0" layoutY="83.0" prefHeight="17.0" prefWidth="81.0" text="App Password" />
       <ImageView fitHeight="17.0" fitWidth="13.0" layoutX="324.0" layoutY="84.0" onMouseClicked="#learnAboutAppPassword" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@hyperlink.png" />
+            <Image url="@media/hyperlink.png" />
          </image>
       </ImageView>
       <TextArea fx:id="txtSubject" layoutX="24.0" layoutY="163.0" prefHeight="45.0" prefWidth="321.0" promptText="Subject" wrapText="true" />

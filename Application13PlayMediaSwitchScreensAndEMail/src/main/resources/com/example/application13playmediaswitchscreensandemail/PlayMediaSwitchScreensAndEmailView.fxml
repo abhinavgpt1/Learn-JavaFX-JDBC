@@ -11,25 +11,25 @@
     <children>
         <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="38.0" layoutY="30.0" onMouseClicked="#playNotification" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@notificationPng.png" />
+                <Image url="@media/notificationPng.png" />
             </image>
         </ImageView>
         <Label alignment="CENTER" layoutX="20.0" layoutY="87.0" prefHeight="17.0" prefWidth="87.0" text="Notification" />
         <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="122.0" layoutY="30.0" onMouseClicked="#playAudioClip" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@audio.png" />
+                <Image url="@media/audio.png" />
             </image>
         </ImageView>
       <Label alignment="CENTER" layoutX="104.0" layoutY="87.0" prefHeight="17.0" prefWidth="87.0" text="Audio" />
         <Label alignment="CENTER" layoutX="208.0" layoutY="87.0" prefHeight="17.0" prefWidth="44.0" text="Video" />
       <ImageView fitHeight="51.0" fitWidth="51.0" layoutX="202.0" layoutY="30.0" onMouseClicked="#playVideoClip" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@video.png" />
+            <Image url="@media/video.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="40.0" fitWidth="42.0" layoutX="286.0" layoutY="35.0" onMouseClicked="#navigateToEmailPage" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@email.png" />
+            <Image url="@media/email.png" />
          </image>
       </ImageView>
       <Label alignment="CENTER" layoutX="284.0" layoutY="87.0" prefHeight="17.0" prefWidth="44.0" text="Email" />

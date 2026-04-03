@@ -17,7 +17,7 @@ NOTE: Javafx came with Java 8, but now you need to follow
 ```
 --module-path "C:\Users\username\Desktop\javafx-sdk-24.0.2\lib" --add-modules javafx.controls,javafx.fxml
 ```
-6. To use AudioClip, MediaPlayer and MediaView, add javafx.media in --add-modules
+6. To use AudioClip, MediaPlayer and MediaView, add javafx.media in --add-modules. You may specify --enable-native-access=javafx.media also to remove native method usage warnings.
 7. Maven compiler configs can override IDE's java version. So, keep check that maven-compiler-plugin = 24
 8. For JavaFX JDBC codes, make sure to remove fx:controller in fxml to tie DB Connection & Controller with Main.
 
@@ -43,7 +43,7 @@ NOTE:
    * --sun-misc-unsafe-memory-access=allow
        * https://stackoverflow.com/questions/79525654/errors-after-updating-java-23-and-javafx-22-to-java-24-and-javafx-24
    * --enable-native-access=javafx.graphics
-       * No Reference
+   * --enable-native-access=javafx.media
 4. To enable assertions at runtime, pass -ea flag in VM options
 5. Checkout the openjfx docs to run application using javac / java commands.
 

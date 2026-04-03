@@ -52,7 +52,7 @@ public class PlayMediaSwitchScreensAndEmailController {
     @FXML
     void playAudioClip(MouseEvent event) {
         // playing audio using MediaPlayer(heavy library) and not AudioClip (light-weight)
-        URL audioUrl = getClass().getResource("audioclip.mp3");
+        URL audioUrl = getClass().getResource("media/audioclip.mp3");
         Media audioMedia = new Media(audioUrl.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(audioMedia);
         mediaPlayer.play();
@@ -61,14 +61,14 @@ public class PlayMediaSwitchScreensAndEmailController {
     // Tip: singleton audioClip can optimise this event
     @FXML
     void playNotification(MouseEvent event) {
-        URL audioUrl = getClass().getResource("notification.mp3");
+        URL audioUrl = getClass().getResource("media/notification.mp3");
         AudioClip audioClip = new AudioClip(audioUrl.toString());
         audioClip.play();
     }
 
     @FXML
     void playVideoClip(MouseEvent event) {
-        URL videoUrl = getClass().getResource("nosoundvideoclip.mp4");
+        URL videoUrl = getClass().getResource("media/nosoundvideoclip.mp4");
         Media videoMedia = new Media(videoUrl.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(videoMedia);
         mdVideoPlayer.setMediaPlayer(mediaPlayer);
