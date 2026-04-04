@@ -403,12 +403,15 @@ public class StudentRecordsControllerV2 {
          * QQ - Why getSelectedIndex() = -1 ALWAYS for any selection I make in the ComboBox<Integer>, but not for ComboBox<String>?
          * Ans - This behavior occurs because JavaFX's ComboBox uses the equals() method to determine the selected index.
          * When you use a ComboBox<String>, the string you type or select is compared to the items in the list using String.equals(), which works as expected.
-         * However, with a ComboBox<Integer>, if you type a number into the editable ComboBox, the value is a String, not an Integer.
-         * When you call getSelectionModel().getSelectedIndex(), JavaFX tries to find an Integer in the list that equals the typed String, which always fails, so it returns -1.
+         * However, with a ComboBox<Integer>, if you type a number into the EDITABLE ComboBox, the value is a String, not an Integer.
+         * - getSelectionModel().getSelectedItem returns String even if ComboBox<Integer>
+         * - getSelectionModel().getSelectedIndex(), JavaFX tries to find an Integer in the list that equals the typed String, which always fails, so it returns -1.
+         *
+         * Reason: When a JavaFX ComboBox<T> is set to setEditable(true), the internal editor is a TextField. When a user types or selects a value, the editor's content is treated as a String. Unless you tell the ComboBox how to convert that text back into your data type (Integer), it defaults to returning the raw String from the editor.
+         * Fix: comboBox.setConverter(new IntegerStringConverter());
          *
          * Summary:
-         * For ComboBox<String>, the typed value matches the list items by value.
-         * For ComboBox<Integer>, the typed value is a String, but the list contains Integer objects, so no match is found, and the selected index is -1.
+         * ComboBox<String> is a safer option when combobox is editable.
          */
     }
 }
