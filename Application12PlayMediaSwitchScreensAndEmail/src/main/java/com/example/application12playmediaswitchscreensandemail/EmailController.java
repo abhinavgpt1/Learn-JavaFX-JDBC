@@ -102,6 +102,8 @@ public class EmailController {
                         showAlert("Failed to send email", errorList.stream().reduce((s1, s2) -> (s1 + "\n" + s2)).get(), Alert.AlertType.ERROR);
                     }
                 }));
+        // Previously, there was a SMS service which sent txt message on the number entered as:
+        // String response = SST_SMS.bceSunSoftSend(txtMobileNumberOptional.get(), "<Message you want to send>");
     }
 
     @FXML

@@ -234,6 +234,7 @@ public class StudentRecordsController {
         if (!isRollNumberElseAlert() || !isNameElseAlert() || !isPercentageElseAlert())
             return;
 
+        // FYI: CURRENT_DATE (ANSI SQL standard) == CURRENT_DATE() == CURDATE()
         String insertStudentDetails = "INSERT INTO students (roll_number, name, percentage, date_of_admission) values(?, ?, ?, CURRENT_DATE)";
         int rollNumber = Integer.parseInt(txtRollNumber.getText());
         String name = txtName.getText();
