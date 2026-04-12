@@ -39,3 +39,9 @@ A - You just need to explicitly tell Maven to look for resources inside your jav
 ### Note
 * The JavaFX jdbc apps don't mention database name. So, make sure to have database name in connection strings (dbconfigs).
 * Check MySQLConnection.java: Why it isn't singleton, and why connection pool is better than legacy DriverManager.getConnection() way.
+* qq: Does connection.close() really close the connection in a connection pool? 
+    - Ans: No, it just returns it to the pool for reuse. This is one of the key benefits of using a connection pool: it allows you to reuse existing connections instead of creating new ones, which can be expensive in terms of time and resources.
+    - A new connection is created only when:
+        * Pool is not full yet: It creates new connections only until it reaches the maximum limit
+        * All connections are busy: And pool allows expansion
+        * A connection is truly dead: Timeout / network issue / invalid connection
