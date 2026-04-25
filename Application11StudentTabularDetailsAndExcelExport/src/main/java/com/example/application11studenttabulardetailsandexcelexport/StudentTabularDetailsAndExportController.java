@@ -119,12 +119,13 @@ public class StudentTabularDetailsAndExportController {
         }
 
         String excelDumpFilePath = excelDumpFile.getAbsolutePath();
+        // PTR: This check isn't needed if ExtensionFilter contains only 1 extension i.e. csv
         if(!excelDumpFilePath.toLowerCase().endsWith(".csv")) {
-            excelDumpFilePath = excelDumpFilePath + ".csv";
+            excelDumpFilePath += ".csv";
+            // qq - why not append .csv in existing file object?
+            // ans - File objects are immutable; their abstract pathname cannot be changed after creation.
+            excelDumpFile = new File(excelDumpFilePath);
         }
-        // qq - why not append .csv in existing file object?
-        // ans - File objects are immutable; their abstract pathname cannot be changed after creation.
-        excelDumpFile = new File(excelDumpFilePath);
 
         // Recall: if a file with same name at same path is open, then FileNotFoundException comes: The process cannot access the file because it is being used by another process.
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(excelDumpFile))) {
@@ -138,7 +139,7 @@ public class StudentTabularDetailsAndExportController {
 
             System.out.println("INFO: File downloaded successfully at path: " + excelDumpFilePath);
             // Display location to user and successful operation
-            showAlert("Downloaded", "File downloaded: " + excelDumpFilePath, Alert.AlertType.INFORMATION);
+            showAlert("File Downloaded", "File downloaded: " + excelDumpFilePath, Alert.AlertType.INFORMATION);
         } catch (IOException e) {
             System.out.println("ERROR: File couldn't be downloaded at path: " + excelDumpFilePath + " due to error: " + e.getMessage());
             showAlert("Unknown Error", "File couldn't be downloaded", Alert.AlertType.ERROR);
@@ -222,13 +223,16 @@ public class StudentTabularDetailsAndExportController {
         // Same will be the order at UI.
         tblStudents.getColumns().addAll(rollNumberTableColumn, nameTableColumn, percentageTableColumn, dateOfAdmissionTableColumn);
 
+        // PTR: Records can be filtered in tableView (and there's no need to set the list), if you use FilteredList instead of ObservableList
+		// From Project, eg. billPanelBeanTableList.setPredicate(billPanelBean -> "unpaid".equals(billPanelBean.getBstatus())); // to unset this predicate/filter, setPredicate to null.
+
         /**
          * Further enhancements:
          * 1. adjust column width of DOA. I have to extend it always to see the heading completely.
          * 2. remove extra column right side of DOA
          * 3. add filter + sorting functionality.
          * 4. Editable column fields.
-         * 5. Alert box with big error needs width adjustment - I think we can do that with setMinWidth(REGION.USE_PREF_SIZE
+         * 5. Alert box with big error needs width adjustment - I think we can do that with alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
          * 6. Export in different format (at least .pdf is a real life use case).
          * 7. App10: Restrict DOA in prev. programs to be not more than current date - all dates after current date should be disabled.
          * 8. App10: Default select current date in calendar.

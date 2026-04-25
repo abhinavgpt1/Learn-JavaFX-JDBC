@@ -31,7 +31,7 @@ public abstract class DBConnection {
             // - Use maven clean & compile lifecycle/plugin to check whether dbconfigs folder exist in target.
             // - Check dbconfigs/Readme.md to understand why dbconfigs is in resources and not in java.
 
-            File dbConfigFile = new File(dbConfigFileURL.toURI()); // toString returns file:/C:/Users/... (file:/ is ambigous in our case)
+            File dbConfigFile = new File(dbConfigFileURL.toURI()); // toString returns file:/C:/Users/... (file:/ is ambiguous in our case)
             // FYI, File expects a System File Path, but toString() gives it a Network-style URL.
             return mapper.readValue(dbConfigFile, DatabaseConfig.class);
         } catch (IOException e) {
